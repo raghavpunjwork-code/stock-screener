@@ -5,82 +5,64 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>StockScreener</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0e0f0e;
-  --bg2:#161714;
-  --bg3:#1e1f1c;
-  --bg4:#252621;
-  --text:#f0ede6;
-  --text2:#9a9890;
-  --text3:#5a5852;
-  --border:#2a2b27;
-  --border2:#353630;
-  --green:#4ade80;
-  --green-bg:rgba(74,222,128,.1);
-  --green-dim:#2d7a48;
-  --amber:#f59e0b;
-  --amber-bg:rgba(245,158,11,.1);
-  --red:#f87171;
-  --red-bg:rgba(248,113,113,.1);
-  --red-dim:#8b3535;
-  --blue:#60a5fa;
-  --blue-bg:rgba(96,165,250,.1);
+  --bg:#0e0f0e;--bg2:#161714;--bg3:#1e1f1c;--bg4:#252621;
+  --text:#f0ede6;--text2:#9a9890;--text3:#5a5852;
+  --border:#2a2b27;--border2:#353630;
+  --green:#4ade80;--green-bg:rgba(74,222,128,.1);
+  --amber:#f59e0b;--amber-bg:rgba(245,158,11,.1);
+  --red:#f87171;--red-bg:rgba(248,113,113,.1);
+  --blue:#60a5fa;--blue-bg:rgba(96,165,250,.1);
   --accent:#c8f55a;
   --r:6px;--rl:10px;
 }
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
 
-/* ── topbar ── */
-.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px}
-.logo{display:flex;align-items:center;gap:10px}
-.logo-mark{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center}
-.logo-name{font-family:'DM Serif Display',serif;font-size:18px;color:var(--text);letter-spacing:-.01em}
-.nav{display:flex;gap:2rem;margin-left:2.5rem}
-.nav a{font-size:13px;color:var(--text3);text-decoration:none;font-weight:400;letter-spacing:.01em;transition:color .15s}
-.nav a.on,.nav a:hover{color:var(--text)}
-.topbar-r{display:flex;align-items:center;gap:16px}
+/* ── topbar: single full-width line ── */
+.topbar{
+  background:var(--bg2);
+  border-bottom:1px solid var(--border);
+  padding:0 2rem;
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  height:56px;
+  gap:2rem;
+}
+.logo{display:flex;align-items:center;gap:10px;white-space:nowrap}
+.logo-mark{width:30px;height:30px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-name{font-family:'DM Serif Display',serif;font-size:17px;color:var(--text);letter-spacing:-.01em}
+.hero-inline{display:flex;align-items:baseline;gap:1.5rem;overflow:hidden}
+.hero-title{font-family:'DM Serif Display',serif;font-size:22px;color:var(--text);letter-spacing:-.02em;white-space:nowrap}
+.hero-title em{font-style:italic;color:var(--accent)}
+.hero-sub{font-size:12px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:300}
+.topbar-r{display:flex;align-items:center;gap:14px;white-space:nowrap}
 .pulse-wrap{display:flex;align-items:center;gap:7px}
 .pulse{width:7px;height:7px;border-radius:50%}
 .pulse.live{background:var(--green);box-shadow:0 0 0 0 rgba(74,222,128,.4);animation:ripple 2s infinite}
-.pulse.fallback{background:var(--amber)}
+.pulse.demo{background:var(--text3)}
 .pulse.loading{background:var(--text3);animation:blink 1s infinite}
 @keyframes ripple{0%{box-shadow:0 0 0 0 rgba(74,222,128,.4)}70%{box-shadow:0 0 0 8px rgba(74,222,128,0)}100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 .pulse-label{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)}
 .pulse-label.live{color:var(--green)}
-.pulse-label.fallback{color:var(--amber)}
-.divider{width:1px;height:18px;background:var(--border2)}
-.next-refresh{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)}
+.divider{width:1px;height:16px;background:var(--border2)}
+.countdown{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)}
 .clock{font-family:'DM Mono',monospace;font-size:13px;color:var(--text2)}
 
 /* ── page ── */
-.page{max-width:1400px;margin:0 auto;padding:2.5rem 2rem}
+.page{max-width:1400px;margin:0 auto;padding:2rem}
 
-/* ── hero header ── */
-.hero{margin-bottom:2.5rem;display:flex;align-items:flex-end;justify-content:space-between}
-.hero-left{}
-.hero-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:.6rem}
-.hero-title{font-family:'DM Serif Display',serif;font-size:42px;line-height:1;color:var(--text);letter-spacing:-.02em}
-.hero-title em{font-style:italic;color:var(--accent)}
-.hero-sub{font-size:13px;color:var(--text3);margin-top:.6rem;font-weight:300}
-.hero-right{text-align:right}
-.last-upd{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)}
-
-/* ── banner ── */
-.banner{border-radius:var(--r);padding:10px 14px;font-size:12px;margin-bottom:1.5rem;display:flex;align-items:center;gap:10px;border:1px solid}
-.banner.warn{background:var(--amber-bg);color:var(--amber);border-color:rgba(245,158,11,.25)}
-.banner.info{background:var(--green-bg);color:var(--green);border-color:rgba(74,222,128,.2)}
-.banner.hidden{display:none}
-
-/* ── summary strip ── */
+/* ── summary ── */
 .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:2rem}
 .sm{background:var(--bg2);padding:1.25rem 1.5rem}
 .sm-n{font-family:'DM Serif Display',serif;font-size:32px;line-height:1;letter-spacing:-.02em}
-.sm-l{font-size:11px;color:var(--text3);margin-top:6px;text-transform:uppercase;letter-spacing:.07em;font-weight:400}
+.sm-l{font-size:11px;color:var(--text3);margin-top:6px;text-transform:uppercase;letter-spacing:.07em}
 .sm-hint{font-family:'DM Mono',monospace;font-size:11px;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.last-upd{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);margin-bottom:1.25rem}
 
 /* ── tabs ── */
 .tabs{display:flex;gap:6px;margin-bottom:1.75rem;flex-wrap:wrap}
@@ -92,7 +74,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
 
 /* ── card ── */
-.card{background:var(--bg2);border-radius:var(--rl);border:1px solid var(--border);overflow:hidden;transition:border-color .2s,transform .15s;cursor:default}
+.card{background:var(--bg2);border-radius:var(--rl);border:1px solid var(--border);overflow:hidden;transition:border-color .2s,transform .15s}
 .card:hover{border-color:var(--border2);transform:translateY(-2px)}
 .card.buy{border-top:2px solid var(--green)}
 .card.sell{border-top:2px solid var(--red)}
@@ -146,45 +128,78 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .sig-a{background:var(--amber-bg);color:var(--amber)}
 .sig-n{background:var(--bg4);color:var(--text3);border:1px solid var(--border)}
 
-/* ── skeleton ── */
 .skeleton{background:var(--bg2);border-radius:var(--rl);border:1px solid var(--border);padding:1.5rem;min-height:360px;position:relative;overflow:hidden}
 .skeleton::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.03) 50%,transparent 100%);animation:sh 1.6s infinite}
 @keyframes sh{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
 .sk{background:var(--bg4);border-radius:3px;margin-bottom:10px}
-
 .empty{grid-column:1/-1;text-align:center;padding:3rem;color:var(--text3);font-size:14px;background:var(--bg2);border-radius:var(--rl);border:1px solid var(--border)}
 .disclaimer{font-size:11px;color:var(--text3);text-align:center;margin-top:2.5rem;line-height:1.8;font-weight:300}
+.sector-section{margin-top:2.5rem;margin-bottom:1rem}
+.sector-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:1.25rem}
+.sector-title{font-family:'DM Serif Display',serif;font-size:20px;color:var(--text);letter-spacing:-.01em}
+.sector-sub{font-size:12px;color:var(--text3);margin-top:3px;font-family:'DM Mono',monospace}
+.sec-toggle{display:flex;border:1px solid var(--border2);border-radius:var(--r);overflow:hidden;flex-shrink:0}
+.sec-btn{font-size:12px;padding:6px 14px;background:transparent;color:var(--text3);border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.sec-btn.on{background:var(--accent);color:#0e0f0e;font-weight:500}
+.sector-grid{display:grid;grid-template-columns:1fr 300px;gap:1.25rem;align-items:start}
+.sector-chart-panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:1.25rem}
+.sec-legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:1rem}
+.sec-leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2)}
+.sec-leg-sq{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.sector-table{display:flex;flex-direction:column;gap:8px}
+.stbl-head{font-size:10px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.stbl-row{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px}
+.stbl-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.stbl-name{font-size:13px;font-weight:500;color:var(--text)}
+.stbl-count{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace}
+.stbl-track{height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;margin-bottom:7px}
+.stbl-fill{height:100%;border-radius:2px;transition:width .5s ease}
+.stbl-pills{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.spill-buy{font-size:9px;padding:2px 7px;border-radius:3px;background:rgba(74,222,128,.15);color:#4ade80;font-weight:500;font-family:'DM Mono',monospace}
+.spill-hold{font-size:9px;padding:2px 7px;border-radius:3px;background:rgba(245,158,11,.15);color:#f59e0b;font-weight:500;font-family:'DM Mono',monospace}
+.spill-sell{font-size:9px;padding:2px 7px;border-radius:3px;background:rgba(248,113,113,.15);color:#f87171;font-weight:500;font-family:'DM Mono',monospace}
+.sector-insight{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:12px 16px;margin-top:1rem;font-size:12px;color:var(--text2);line-height:1.7}
+.sector-insight strong{color:var(--accent);font-weight:500}
+@media(max-width:800px){.sector-grid{grid-template-columns:1fr}}
 
-@media(max-width:700px){.summary{grid-template-columns:repeat(2,1fr)}.nav{display:none}.page{padding:1rem}.grid{grid-template-columns:1fr}.hero-title{font-size:30px}.hero{flex-direction:column;gap:1rem;align-items:flex-start}}
+@media(max-width:900px){
+  .hero-sub{display:none}
+  .topbar{grid-template-columns:auto 1fr auto}
+}
+@media(max-width:700px){
+  .summary{grid-template-columns:repeat(2,1fr)}
+  .page{padding:1rem}
+  .grid{grid-template-columns:1fr}
+  .hero-inline{display:none}
+  .topbar{grid-template-columns:auto auto}
+}
 </style>
 </head>
 <body>
 
 <nav class="topbar">
-  <div style="display:flex;align-items:center">
-    <div class="logo">
-      <div class="logo-mark">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <polyline points="1,12 5,7 8,9 12,4 15,6" stroke="#0e0f0e" stroke-width="2" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
-          <circle cx="12" cy="4" r="1.8" fill="#0e0f0e"/>
-        </svg>
-      </div>
-      <span class="logo-name">Screener</span>
+  <div class="logo">
+    <div class="logo-mark">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <polyline points="1,12 5,7 8,9 12,4 15,6" stroke="#0e0f0e" stroke-width="2" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="12" cy="4" r="1.8" fill="#0e0f0e"/>
+      </svg>
     </div>
-    <div class="nav">
-      <a href="#" class="on">Dashboard</a>
-      <a href="#">Screener</a>
-      <a href="#">Backtest</a>
-      <a href="#">API</a>
-    </div>
+    <span class="logo-name">StockScreener</span>
   </div>
+
+  <div class="hero-inline">
+    <div class="hero-title">Market <em>dashboard</em></div>
+    <div class="hero-sub">Buy · hold · sell recommendations with price targets &amp; RSI signals · S&amp;P 500 subset · yfinance ~15 min delay</div>
+  </div>
+
   <div class="topbar-r">
     <div class="pulse-wrap">
       <div class="pulse loading" id="dot"></div>
-      <span class="pulse-label loading" id="status-label">connecting</span>
+      <span class="pulse-label" id="status-label">connecting</span>
     </div>
     <div class="divider"></div>
-    <span class="next-refresh" id="countdown"></span>
+    <span class="countdown" id="countdown"></span>
     <div class="divider"></div>
     <span class="clock" id="clock">--:--:--</span>
   </div>
@@ -192,26 +207,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
 <div class="page">
 
-  <div class="hero">
-    <div class="hero-left">
-      <div class="hero-eyebrow">S&amp;P 500 subset &middot; yfinance ~15min delay</div>
-      <div class="hero-title">Market<br><em>dashboard</em></div>
-      <div class="hero-sub">Buy &middot; hold &middot; sell recommendations with price targets &amp; RSI signals</div>
-    </div>
-    <div class="hero-right">
-      <div class="last-upd" id="last-updated"></div>
-    </div>
-  </div>
-
-  <div class="banner hidden" id="banner">
-    <span id="banner-icon"></span>
-    <span id="banner-msg"></span>
-  </div>
-
   <div class="summary">
     <div class="sm">
       <div class="sm-n" id="s-total">—</div>
-      <div class="sm-l">Tracked</div>
+      <div class="sm-l">Stocks tracked</div>
       <div class="sm-hint" style="color:var(--text3)" id="s-source">Loading...</div>
     </div>
     <div class="sm">
@@ -231,6 +230,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     </div>
   </div>
 
+  <div class="last-upd" id="last-updated"></div>
+
   <div class="tabs">
     <button class="tab on" onclick="setFilter(this,'all')">All stocks</button>
     <button class="tab" onclick="setFilter(this,'buy')">Buy signals</button>
@@ -242,9 +243,33 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
   <div class="grid" id="grid"></div>
 
+  <!-- ── Sector Breakdown ── -->
+  <div class="sector-section">
+    <div class="sector-header">
+      <div>
+        <div class="sector-title">Sector allocation breakdown</div>
+        <div class="sector-sub" id="sec-sub">10 stocks across 5 sectors</div>
+      </div>
+      <div class="sec-toggle">
+        <button class="sec-btn on" onclick="setSectorMode(this,'all')">All stocks</button>
+        <button class="sec-btn" onclick="setSectorMode(this,'buy')">Buy signals only</button>
+      </div>
+    </div>
+    <div class="sector-grid">
+      <div class="sector-chart-panel">
+        <div class="sec-legend" id="sec-legend"></div>
+        <div style="position:relative;width:100%;height:260px">
+          <canvas id="sectorChart" role="img" aria-label="Horizontal bar chart showing stock count per sector">Sector distribution of screened stocks.</canvas>
+        </div>
+      </div>
+      <div class="sector-table" id="sector-table"></div>
+    </div>
+    <div class="sector-insight" id="sector-insight"></div>
+  </div>
+
   <p class="disclaimer">
     For educational &amp; CV demonstration purposes only &mdash; not financial advice.<br>
-    Live data via FastAPI + yfinance. Auto-refreshes every 60 seconds when API is running.
+    Live data via FastAPI + yfinance when API is running. Auto-refreshes every 60 seconds.
   </p>
 </div>
 
@@ -266,16 +291,12 @@ const FALLBACK = [
   {ticker:'AMD',name:'Adv. Micro Dev.',sector:'Semiconductors',current_price:162.30,chg:-1.8,pe_ratio:null,rsi:29.1,price_vs_ma50:-11.4,volume_spike:2.4,above_ma50:false,above_ma200:false,golden_cross:false},
 ];
 
-let allStocks = [];
-let active = 'all';
-let isLive = false;
-let countdownSecs = 0;
-let countdownTimer = null;
+let allStocks = [], active = 'all', isLive = false;
+let countdownSecs = 0, countdownTimer = null;
 
 function enrich(d) {
   let score = 0;
-  if (d.rsi < 35) score += 2;
-  else if (d.rsi > 70) score -= 2;
+  if (d.rsi < 35) score += 2; else if (d.rsi > 70) score -= 2;
   if (d.above_ma50) score += 1;
   if (d.above_ma200) score += 1;
   if (d.golden_cross) score += 2;
@@ -315,31 +336,24 @@ async function fetchWithTimeout(url, ms) {
 
 async function loadData() {
   setStatus('loading');
-  showBanner('hidden');
   if (allStocks.length === 0) showSkeletons(6);
-
   try {
     const data = await fetchWithTimeout(API_BASE + '/screen?limit=20', API_TIMEOUT_MS);
     allStocks = (data.results || data).map(enrich);
     isLive = true;
     setStatus('live');
-    showBanner('info', '&#9679;', 'Live data from FastAPI + yfinance. Auto-refreshing every 60s.');
     document.getElementById('s-source').textContent = 'Live · FastAPI';
   } catch(err) {
-    console.warn('API offline, using fallback:', err.message);
+    /* Silent fallback — no error shown to user */
     allStocks = FALLBACK.map(enrich);
     isLive = false;
-    setStatus('fallback');
-    showBanner('warn', '&#9888;',
-      'API offline &mdash; showing demo data. Run: <code style="font-family:\'DM Mono\',monospace;background:rgba(255,255,255,.08);padding:1px 6px;border-radius:3px">uvicorn app.main:app --reload</code>');
-    document.getElementById('s-source').textContent = 'Demo fallback';
+    setStatus('demo');
+    document.getElementById('s-source').textContent = 'Demo data';
   }
-
   render();
   document.getElementById('last-updated').textContent =
-    'Updated ' + new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) +
+    'Updated ' + new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) +
     (isLive ? ' · live' : ' · demo');
-
   startCountdown();
 }
 
@@ -347,16 +361,11 @@ function startCountdown() {
   if (countdownTimer) clearInterval(countdownTimer);
   countdownSecs = Math.floor(REFRESH_INTERVAL_MS / 1000);
   const el = document.getElementById('countdown');
-  el.textContent = 'next update ' + countdownSecs + 's';
+  el.textContent = 'refresh in ' + countdownSecs + 's';
   countdownTimer = setInterval(() => {
     countdownSecs--;
-    if (countdownSecs <= 0) {
-      clearInterval(countdownTimer);
-      el.textContent = 'refreshing...';
-      loadData();
-    } else {
-      el.textContent = 'next update ' + countdownSecs + 's';
-    }
+    if (countdownSecs <= 0) { clearInterval(countdownTimer); el.textContent = 'refreshing...'; loadData(); }
+    else el.textContent = 'refresh in ' + countdownSecs + 's';
   }, 1000);
 }
 
@@ -365,15 +374,7 @@ function setStatus(state) {
   const lbl = document.getElementById('status-label');
   dot.className = 'pulse ' + state;
   lbl.className = 'pulse-label ' + state;
-  lbl.textContent = state === 'live' ? 'live' : state === 'fallback' ? 'demo data' : 'connecting';
-}
-
-function showBanner(type, icon, msg) {
-  const b = document.getElementById('banner');
-  if (type === 'hidden') { b.className = 'banner hidden'; return; }
-  b.className = 'banner ' + type;
-  document.getElementById('banner-icon').innerHTML = icon || '';
-  document.getElementById('banner-msg').innerHTML = msg || '';
+  lbl.textContent = state === 'live' ? 'live' : state === 'demo' ? 'demo' : 'connecting';
 }
 
 function showSkeletons(n) {
@@ -391,14 +392,10 @@ function showSkeletons(n) {
 
 function setFilter(btn, f) {
   document.querySelectorAll('.tab').forEach(b => b.classList.remove('on'));
-  btn.classList.add('on');
-  active = f;
-  render();
+  btn.classList.add('on'); active = f; render();
 }
 
-function rsiColor(v) {
-  return v < 30 ? 'var(--red)' : v > 70 ? 'var(--amber)' : 'var(--green)';
-}
+function rsiColor(v) { return v < 30 ? 'var(--red)' : v > 70 ? 'var(--amber)' : 'var(--green)'; }
 
 function sigClass(s) {
   if (/golden|above ma|strong|momentum|stable|reasonable/.test(s)) return 'sig-g';
@@ -426,78 +423,209 @@ function makeCard(d) {
     </div>
     <div class="card-price">
       <span class="price-big">$${d.current_price.toFixed(2)}</span>
-      <span class="chg-pill ${up ? 'up-pill' : 'dn-pill'}">${up ? '+' : ''}${d.chg.toFixed(1)}%</span>
+      <span class="chg-pill ${up ? 'up-pill' : 'dn-pill'}">${up?'+':''}${d.chg.toFixed(1)}%</span>
     </div>
     <div class="card-stats">
       <div class="stat"><div class="stat-l">P/E</div><div class="stat-v">${d.pe_ratio ? d.pe_ratio.toFixed(1) : '—'}</div></div>
       <div class="stat"><div class="stat-l">RSI 14d</div><div class="stat-v" style="color:${rsiColor(d.rsi)}">${d.rsi.toFixed(1)}</div></div>
-      <div class="stat"><div class="stat-l">vs MA50</div><div class="stat-v" style="color:${d.price_vs_ma50 >= 0 ? 'var(--green)' : 'var(--red)'}">${d.price_vs_ma50 > 0 ? '+' : ''}${d.price_vs_ma50.toFixed(1)}%</div></div>
+      <div class="stat"><div class="stat-l">vs MA50</div><div class="stat-v" style="color:${d.price_vs_ma50>=0?'var(--green)':'var(--red)'}">${d.price_vs_ma50>0?'+':''}${d.price_vs_ma50.toFixed(1)}%</div></div>
     </div>
     <div class="rsi-wrap">
       <div class="rsi-label-row"><span>oversold &lt;30</span><span>${d.rsi.toFixed(0)}</span><span>overbought &gt;70</span></div>
       <div class="rsi-track">
-        <div class="rsi-zone-r"></div>
-        <div class="rsi-zone-a"></div>
+        <div class="rsi-zone-r"></div><div class="rsi-zone-a"></div>
         <div class="rsi-fill" style="width:${Math.min(d.rsi,100).toFixed(0)}%;background:${rsiColor(d.rsi)}"></div>
       </div>
     </div>
     <div class="target-box">
       <div class="target-hd ${d.rec}">
         <span>price target</span>
-        <span>${d.rec === 'buy' ? 'upside opportunity' : d.rec === 'sell' ? 'downside risk' : 'fair value range'}</span>
+        <span>${d.rec==='buy'?'upside opportunity':d.rec==='sell'?'downside risk':'fair value range'}</span>
       </div>
       <div class="target-cols">
         <div class="tc">
           <div class="tc-l">Bear</div>
-          <div class="tc-v ${d.bear > d.current_price ? 'tc-up' : 'tc-dn'}">$${d.bear}</div>
-          <div class="tc-pct">${upPct(d.current_price, d.bear)}</div>
+          <div class="tc-v ${d.bear>d.current_price?'tc-up':'tc-dn'}">$${d.bear}</div>
+          <div class="tc-pct">${upPct(d.current_price,d.bear)}</div>
         </div>
         <div class="tc tc-mid">
           <div class="tc-l">Target</div>
-          <div class="tc-v ${d.target > d.current_price ? 'tc-up' : 'tc-dn'}">$${d.target}</div>
-          <div class="tc-pct"><strong>${upPct(d.current_price, d.target)}</strong></div>
+          <div class="tc-v ${d.target>d.current_price?'tc-up':'tc-dn'}">$${d.target}</div>
+          <div class="tc-pct"><strong>${upPct(d.current_price,d.target)}</strong></div>
         </div>
         <div class="tc">
           <div class="tc-l">Bull</div>
-          <div class="tc-v ${d.bull > d.current_price ? 'tc-up' : 'tc-dn'}">$${d.bull}</div>
-          <div class="tc-pct">${upPct(d.current_price, d.bull)}</div>
+          <div class="tc-v ${d.bull>d.current_price?'tc-up':'tc-dn'}">$${d.bull}</div>
+          <div class="tc-pct">${upPct(d.current_price,d.bull)}</div>
         </div>
       </div>
     </div>
-    <div class="signals">
-      ${d.signals.slice(0,5).map(s => `<span class="sig ${sigClass(s)}">${s}</span>`).join('')}
-    </div>
+    <div class="signals">${d.signals.slice(0,5).map(s=>`<span class="sig ${sigClass(s)}">${s}</span>`).join('')}</div>
   </div>`;
 }
 
 function render() {
   const filtered = allStocks.filter(d => {
-    if (active === 'all') return true;
-    if (active === 'buy') return d.rec === 'buy';
-    if (active === 'hold') return d.rec === 'hold';
-    if (active === 'sell') return d.rec === 'sell';
-    if (active === 'oversold') return d.rsi < 35;
-    if (active === 'golden') return d.golden_cross;
+    if (active==='all') return true;
+    if (active==='buy') return d.rec==='buy';
+    if (active==='hold') return d.rec==='hold';
+    if (active==='sell') return d.rec==='sell';
+    if (active==='oversold') return d.rsi < 35;
+    if (active==='golden') return d.golden_cross;
     return true;
   });
   document.getElementById('grid').innerHTML = filtered.length
     ? filtered.map(makeCard).join('')
     : '<div class="empty">No stocks match this filter.</div>';
-  const buys = allStocks.filter(d => d.rec === 'buy');
+  const buys = allStocks.filter(d => d.rec==='buy');
   document.getElementById('s-total').textContent = allStocks.length;
   document.getElementById('s-buy').textContent = buys.length;
-  document.getElementById('s-buy-hint').textContent = buys.slice(0,4).map(d => d.ticker).join(', ');
-  document.getElementById('s-hold').textContent = allStocks.filter(d => d.rec === 'hold').length;
-  document.getElementById('s-sell').textContent = allStocks.filter(d => d.rec === 'sell').length;
+  document.getElementById('s-buy-hint').textContent = buys.slice(0,4).map(d=>d.ticker).join(', ');
+  document.getElementById('s-hold').textContent = allStocks.filter(d=>d.rec==='hold').length;
+  document.getElementById('s-sell').textContent = allStocks.filter(d=>d.rec==='sell').length;
 }
 
 const clk = document.getElementById('clock');
-function tick() {
-  clk.textContent = new Date().toLocaleTimeString('en-US',{hour12:false,hour:'2-digit',minute:'2-digit',second:'2-digit'});
-}
+function tick() { clk.textContent = new Date().toLocaleTimeString('en-US',{hour12:false,hour:'2-digit',minute:'2-digit',second:'2-digit'}); }
 tick(); setInterval(tick, 1000);
-
 loadData();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const SECTOR_COLORS = {
+  'Technology':    '#c8f55a',
+  'Semiconductors':'#60a5fa',
+  'Consumer':      '#f59e0b',
+  'Financials':    '#4ade80',
+  'Auto / EV':     '#f87171',
+  'Healthcare':    '#c084fc',
+  'Energy':        '#fb923c',
+  'Industrials':   '#94a3b8',
+};
+function colorFor(s){ return SECTOR_COLORS[s] || '#888780'; }
+
+let sectorMode = 'all';
+let sectorChart = null;
+
+function setSectorMode(btn, m) {
+  document.querySelectorAll('.sec-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  sectorMode = m;
+  drawSector();
+}
+
+function buildSectorData(m) {
+  const src = m === 'buy' ? allStocks.filter(s => s.rec === 'buy') : allStocks;
+  const map = {};
+  src.forEach(s => {
+    const sec = s.sector || 'Unknown';
+    if (!map[sec]) map[sec] = {total:0, buy:0, hold:0, sell:0, tickers:[]};
+    map[sec].total++;
+    map[sec][s.rec]++;
+    map[sec].tickers.push(s.ticker);
+  });
+  return map;
+}
+
+function drawSector() {
+  if (!allStocks.length) return;
+  const data = buildSectorData(sectorMode);
+  const labels = Object.keys(data).sort((a,b) => data[b].total - data[a].total);
+  const counts = labels.map(l => data[l].total);
+  const total = counts.reduce((a,b) => a+b, 0);
+  const isDark = true;
+  const textColor = '#9a9890';
+  const gridColor = 'rgba(255,255,255,0.06)';
+
+  document.getElementById('sec-sub').textContent =
+    `${total} stock${total!==1?'s':''} across ${labels.length} sector${labels.length!==1?'s':''}`;
+
+  document.getElementById('sec-legend').innerHTML = labels.map(l => `
+    <span class="sec-leg-item">
+      <span class="sec-leg-sq" style="background:${colorFor(l)}"></span>
+      ${l} · ${Math.round(data[l].total/total*100)}%
+    </span>`).join('');
+
+  if (sectorChart) sectorChart.destroy();
+  sectorChart = new Chart(document.getElementById('sectorChart'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Stocks',
+        data: counts,
+        backgroundColor: labels.map(l => colorFor(l)),
+        borderRadius: 4,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {display:false},
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              const s = labels[ctx.dataIndex];
+              const d = data[s];
+              return [`${d.total} stock${d.total!==1?'s':''}`,
+                      `Buy: ${d.buy}  Hold: ${d.hold}  Sell: ${d.sell}`];
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid:{color:gridColor},
+          ticks:{color:textColor,stepSize:1,font:{size:11}},
+          title:{display:true,text:'Number of stocks',color:textColor,font:{size:11}}
+        },
+        y: {
+          grid:{display:false},
+          ticks:{color:textColor,font:{size:12,family:"'DM Mono',monospace"}}
+        }
+      }
+    }
+  });
+
+  const maxCount = Math.max(...counts);
+  document.getElementById('sector-table').innerHTML =
+    '<div class="stbl-head">Sector detail</div>' +
+    labels.map(l => {
+      const d = data[l];
+      const pct = Math.round(d.total/total*100);
+      const barW = Math.round(d.total/maxCount*100);
+      return `
+      <div class="stbl-row">
+        <div class="stbl-top">
+          <span class="stbl-name">${l}</span>
+          <span class="stbl-count">${d.total} · ${pct}%</span>
+        </div>
+        <div class="stbl-track"><div class="stbl-fill" style="width:${barW}%;background:${colorFor(l)}"></div></div>
+        <div class="stbl-pills">
+          ${d.buy  ? `<span class="spill-buy">BUY ×${d.buy}</span>` : ''}
+          ${d.hold ? `<span class="spill-hold">HOLD ×${d.hold}</span>` : ''}
+          ${d.sell ? `<span class="spill-sell">SELL ×${d.sell}</span>` : ''}
+          <span style="font-size:9px;color:var(--text3);padding:2px 4px;font-family:'DM Mono',monospace">${d.tickers.join(', ')}</span>
+        </div>
+      </div>`;
+    }).join('');
+
+  const buyData = buildSectorData('buy');
+  const top = Object.entries(buyData).sort((a,b)=>b[1].total-a[1].total)[0];
+  if (top) {
+    const [sec, d] = top;
+    document.getElementById('sector-insight').innerHTML =
+      `<strong>Insight:</strong> ${sec} leads with ${d.buy} buy signal${d.buy!==1?'s':''} — strongest momentum sector in the current screen. ` +
+      `${sectorMode==='all' ? 'Toggle to "Buy signals only" to isolate high-conviction sector bets.' : 'These are your highest-conviction sector allocations.'}`;
+  }
+}
+
+const _origRender = render;
+render = function() { _origRender(); drawSector(); };
 </script>
 </body>
 </html>
