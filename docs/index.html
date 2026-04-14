@@ -207,6 +207,50 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .rec-desc{font-size:12px;color:var(--text2);line-height:1.6}
 
 .report-footer{display:flex;align-items:center;justify-content:space-between;padding:1.5rem 0 0;gap:12px;flex-wrap:wrap}
+
+/* ── market pulse strip ── */
+.pulse-strip{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 2rem;height:38px;display:flex;align-items:center;gap:2rem;overflow-x:auto;scrollbar-width:none}
+.pulse-strip::-webkit-scrollbar{display:none}
+.pulse-item{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.pulse-item-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase}
+.pulse-item-val{font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:var(--text)}
+.pulse-item-chg{font-family:'DM Mono',monospace;font-size:11px;padding:1px 6px;border-radius:3px}
+.pulse-up{background:var(--green-bg);color:var(--green)}
+.pulse-dn{background:var(--red-bg);color:var(--red)}
+.pulse-divider{width:1px;height:16px;background:var(--border2);flex-shrink:0}
+.pulse-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.pulse-dot.open{background:var(--green);animation:ripple2 2s infinite}
+.pulse-dot.closed{background:var(--text3)}
+@keyframes ripple2{0%{box-shadow:0 0 0 0 rgba(74,222,128,.4)}70%{box-shadow:0 0 0 6px rgba(74,222,128,0)}100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}}
+.pulse-status{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.06em}
+.pulse-status.open{color:var(--green)}
+.pulse-status.closed{color:var(--text3)}
+
+/* ── portfolio templates ── */
+.templates-section{margin-bottom:1.25rem}
+.templates-label{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.templates-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tpl-card{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:12px 14px;cursor:pointer;transition:border-color .15s,background .15s;text-align:left}
+.tpl-card:hover{border-color:var(--accent);background:var(--bg4)}
+.tpl-card.selected-tpl{border-color:var(--accent);background:var(--accent-dim)}
+.tpl-name{font-size:13px;font-weight:500;color:var(--text);margin-bottom:3px}
+.tpl-desc{font-size:11px;color:var(--text3);margin-bottom:8px;line-height:1.5}
+.tpl-tags{display:flex;flex-wrap:wrap;gap:4px}
+.tpl-tag{font-size:9px;font-family:'DM Mono',monospace;padding:2px 6px;border-radius:3px;background:var(--bg4);color:var(--text3)}
+.tpl-divider{height:1px;background:var(--border);margin:1rem 0;display:flex;align-items:center;justify-content:center}
+.tpl-divider-label{font-size:10px;color:var(--text3);background:var(--bg2);padding:0 12px;font-family:'DM Mono',monospace;letter-spacing:.06em}
+
+/* ── benchmark chart ── */
+.benchmark-section{margin-top:1rem}
+.bench-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px}
+.bench-title{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);text-transform:uppercase;letter-spacing:.08em}
+.bench-legend{display:flex;gap:16px}
+.bench-leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2)}
+.bench-leg-sq{width:24px;height:3px;border-radius:2px;flex-shrink:0}
+.bench-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem}
+.bench-stat{background:var(--bg3);border-radius:var(--r);padding:10px 12px;text-align:center}
+.bench-stat-val{font-family:'DM Mono',monospace;font-size:16px;font-weight:500}
+.bench-stat-label{font-size:10px;color:var(--text3);margin-top:3px;text-transform:uppercase;letter-spacing:.04em}
 .disclaimer{font-size:11px;color:var(--text3);line-height:1.7;flex:1}
 
 @media(max-width:700px){
@@ -236,6 +280,38 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <span class="clock" id="clock">--:--:--</span>
   </div>
 </nav>
+
+<!-- market pulse strip -->
+<div class="pulse-strip" id="pulse-strip">
+  <div class="pulse-item">
+    <div class="pulse-dot open" id="mkt-dot"></div>
+    <span class="pulse-status open" id="mkt-status">Market Open</span>
+  </div>
+  <div class="pulse-divider"></div>
+  <div class="pulse-item">
+    <span class="pulse-item-label">S&amp;P 500</span>
+    <span class="pulse-item-val" id="sp500-val">—</span>
+    <span class="pulse-item-chg" id="sp500-chg">—</span>
+  </div>
+  <div class="pulse-divider"></div>
+  <div class="pulse-item">
+    <span class="pulse-item-label">NASDAQ</span>
+    <span class="pulse-item-val" id="nasdaq-val">—</span>
+    <span class="pulse-item-chg" id="nasdaq-chg">—</span>
+  </div>
+  <div class="pulse-divider"></div>
+  <div class="pulse-item">
+    <span class="pulse-item-label">VIX</span>
+    <span class="pulse-item-val" id="vix-val">—</span>
+    <span style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace" id="vix-label">—</span>
+  </div>
+  <div class="pulse-divider"></div>
+  <div class="pulse-item">
+    <span class="pulse-item-label">DOW</span>
+    <span class="pulse-item-val" id="dow-val">—</span>
+    <span class="pulse-item-chg" id="dow-chg">—</span>
+  </div>
+  <div class="pulse-divider"></div>
 
 <div class="hero">
   <div class="hero-eyebrow">AI-powered portfolio analysis</div>
@@ -282,6 +358,35 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
         </svg>
         <input class="search-input" id="search" type="text" placeholder="Search S&P 500 — try Apple, NVDA, JPM..." autocomplete="off">
         <div class="dropdown" id="dd"></div>
+      </div>
+
+      <!-- templates -->
+      <div class="templates-section">
+        <div class="templates-label">Or start with a template</div>
+        <div class="templates-grid">
+          <button class="tpl-card" onclick="loadTemplate('aggressive')">
+            <div class="tpl-name">Aggressive Growth</div>
+            <div class="tpl-desc">High-growth tech &amp; semiconductors. High risk, high reward.</div>
+            <div class="tpl-tags">
+              <span class="tpl-tag">NVDA</span><span class="tpl-tag">MSFT</span><span class="tpl-tag">META</span><span class="tpl-tag">AMZN</span><span class="tpl-tag">GOOGL</span>
+            </div>
+          </button>
+          <button class="tpl-card" onclick="loadTemplate('balanced')">
+            <div class="tpl-name">Balanced Portfolio</div>
+            <div class="tpl-desc">Mix of growth, value &amp; defensives. Moderate risk.</div>
+            <div class="tpl-tags">
+              <span class="tpl-tag">AAPL</span><span class="tpl-tag">JPM</span><span class="tpl-tag">JNJ</span><span class="tpl-tag">V</span><span class="tpl-tag">XOM</span>
+            </div>
+          </button>
+          <button class="tpl-card" onclick="loadTemplate('defensive')">
+            <div class="tpl-name">Defensive Income</div>
+            <div class="tpl-desc">Stable dividends &amp; low volatility. Capital preservation.</div>
+            <div class="tpl-tags">
+              <span class="tpl-tag">KO</span><span class="tpl-tag">PG</span><span class="tpl-tag">MRK</span><span class="tpl-tag">NEE</span><span class="tpl-tag">WMT</span>
+            </div>
+          </button>
+        </div>
+        <div class="tpl-divider"><span class="tpl-divider-label">or build your own above</span></div>
       </div>
       <div class="chips" id="chips"></div>
       <div class="step1-footer">
@@ -396,6 +501,46 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       <div class="r-section-body">
         <div class="rec-list" id="recs"></div>
         <div id="rebal-ai"></div>
+      </div>
+    </div>
+
+    <!-- benchmark comparison -->
+    <div class="r-section" id="bench-section" style="display:none">
+      <div class="r-section-head">
+        <div class="r-section-icon" style="background:var(--blue-bg)">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><polyline points="1,12 4,8 7,9 10,5 15,7" stroke="#60a5fa" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="r-section-title">Portfolio vs S&amp;P 500 — 1 year simulated</div>
+          <div class="r-section-sub">How your current holdings would have performed vs the benchmark</div>
+        </div>
+      </div>
+      <div class="r-section-body">
+        <div class="bench-stats">
+          <div class="bench-stat">
+            <div class="bench-stat-val" id="bench-port-ret" style="color:var(--green)">—</div>
+            <div class="bench-stat-label">Your portfolio return</div>
+          </div>
+          <div class="bench-stat">
+            <div class="bench-stat-val" id="bench-sp-ret" style="color:var(--blue)">—</div>
+            <div class="bench-stat-label">S&amp;P 500 return</div>
+          </div>
+          <div class="bench-stat">
+            <div class="bench-stat-val" id="bench-alpha" style="color:var(--accent)">—</div>
+            <div class="bench-stat-label">Alpha (outperformance)</div>
+          </div>
+        </div>
+        <div class="bench-header">
+          <span class="bench-title">Simulated 12-month performance</span>
+          <div class="bench-legend">
+            <div class="bench-leg-item"><div class="bench-leg-sq" style="background:var(--accent)"></div>Your portfolio</div>
+            <div class="bench-leg-item"><div class="bench-leg-sq" style="background:var(--blue)"></div>S&amp;P 500</div>
+          </div>
+        </div>
+        <div style="position:relative;width:100%;height:220px">
+          <canvas id="benchChart" role="img" aria-label="Line chart comparing portfolio performance vs S&P 500 over 12 months">Simulated 12-month performance comparison.</canvas>
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-top:10px;font-family:'DM Mono',monospace">* Simulated using annual returns for each stock based on sector performance. For illustration only.</div>
       </div>
     </div>
 
@@ -737,9 +882,169 @@ function resetAll(){
   document.getElementById('sub1').textContent='Search by company name or ticker symbol';
   document.getElementById('shares-grid').innerHTML='';document.getElementById('port-bar').style.display='none';
   document.getElementById('report').classList.remove('show');document.getElementById('loading').classList.remove('show');
+  document.getElementById('bench-section').style.display='none';
+  if(benchChart){benchChart.destroy();benchChart=null;}
   ['ls1','ls2','ls3','ls4'].forEach(id=>{const el=document.getElementById(id);el.classList.remove('vis','done');});
+  document.querySelectorAll('.tpl-card').forEach(c=>c.classList.remove('selected-tpl'));
   window.scrollTo({top:0,behavior:'smooth'});
 }
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+
+/* ── Market Pulse Strip ── */
+async function fetchIndex(symbol){
+  try{
+    const r=await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1d`,{signal:AbortSignal.timeout(4000)});
+    if(!r.ok)throw new Error();
+    const d=await r.json();
+    const meta=d?.chart?.result?.[0]?.meta;
+    if(!meta)throw new Error();
+    return{price:meta.regularMarketPrice,prev:meta.chartPreviousClose||meta.previousClose,open:meta.marketState==='REGULAR'};
+  }catch{return null;}
+}
+
+async function loadPulse(){
+  const indices=[
+    {sym:'^GSPC',valId:'sp500-val',chgId:'sp500-chg'},
+    {sym:'^IXIC',valId:'nasdaq-val',chgId:'nasdaq-chg'},
+    {sym:'^DJI',valId:'dow-val',chgId:'dow-chg'},
+    {sym:'^VIX',valId:'vix-val',chgId:null},
+    {sym:'^TNX',valId:'treasury-val',chgId:null},
+  ];
+  const results=await Promise.all(indices.map(i=>fetchIndex(i.sym)));
+  results.forEach((r,i)=>{
+    if(!r)return;
+    const idx=indices[i];
+    const valEl=document.getElementById(idx.valId);
+    if(!valEl)return;
+    const isLarge=r.price>1000;
+    valEl.textContent=isLarge?r.price.toLocaleString('en-US',{maximumFractionDigits:0}):r.price.toFixed(idx.sym==='^TNX'?2:2);
+    if(idx.chgId){
+      const chg=((r.price-r.prev)/r.prev*100);
+      const chgEl=document.getElementById(idx.chgId);
+      if(chgEl){chgEl.textContent=(chg>=0?'+':'')+chg.toFixed(2)+'%';chgEl.className='pulse-item-chg '+(chg>=0?'pulse-up':'pulse-dn');}
+    }
+    if(idx.sym==='^VIX'){
+      const lbl=document.getElementById('vix-label');
+      if(lbl)lbl.textContent=r.price<15?'Low fear':r.price<25?'Moderate':r.price<35?'High fear':'Extreme';
+    }
+    if(idx.sym==='^GSPC'){
+      const isOpen=r.open;
+      const dot=document.getElementById('mkt-dot');const st=document.getElementById('mkt-status');
+      if(dot){dot.className='pulse-dot '+(isOpen?'open':'closed');}
+      if(st){st.textContent=isOpen?'Market Open':'Market Closed';st.className='pulse-status '+(isOpen?'open':'closed');}
+    }
+  });
+}
+loadPulse();
+
+/* ── Portfolio Templates ── */
+const TEMPLATES={
+  aggressive:{
+    stocks:['NVDA','MSFT','META','AMZN','GOOGL','AMD','TSLA','AVGO'],
+    shares:[5,10,8,12,15,20,10,3],
+  },
+  balanced:{
+    stocks:['AAPL','JPM','JNJ','V','XOM','WMT','HON','PG','AMZN','MSFT'],
+    shares:[10,15,20,12,18,25,14,16,8,8],
+  },
+  defensive:{
+    stocks:['KO','PG','MRK','NEE','WMT','JNJ','PEP','ABBV','SO','MO'],
+    shares:[30,20,15,25,20,18,22,14,35,28],
+  }
+};
+
+function loadTemplate(name){
+  document.querySelectorAll('.tpl-card').forEach(c=>c.classList.remove('selected-tpl'));
+  event.currentTarget.classList.add('selected-tpl');
+  const tpl=TEMPLATES[name];
+  selected=[];
+  tpl.stocks.forEach((t,i)=>{
+    const s=SP500.find(x=>x.t===t);
+    if(s)selected.push({...s,shares:tpl.shares[i],livePrice:null,src:'static'});
+  });
+  renderChips();
+  document.getElementById('search').value='';
+}
+
+/* ── Benchmark Chart ── */
+let benchChart=null;
+
+const STOCK_ANNUAL_RETURNS={
+  AAPL:0.48,MSFT:0.56,GOOGL:0.52,AMZN:0.82,NVDA:2.39,META:1.94,TSLA:-0.12,
+  'BRK-B':0.28,JPM:0.38,JNJ:0.08,V:0.21,PG:0.12,MA:0.18,HD:0.08,CVX:0.04,
+  MRK:0.32,ABBV:0.28,PEP:0.04,KO:0.06,AVGO:1.12,COST:0.52,MCD:0.14,WMT:0.72,
+  BAC:0.38,DIS:-0.08,ADBE:0.24,CRM:0.48,NFLX:0.88,INTC:-0.42,AMD:0.38,
+  QCOM:0.28,TXN:0.08,NEE:-0.08,UNH:0.12,TMO:0.18,AMGN:0.22,HON:0.14,
+  LOW:0.12,IBM:0.38,GS:0.52,CAT:0.38,SBUX:-0.18,BA:-0.22,MMM:0.28,
+  NKE:-0.12,GE:0.82,F:-0.08,XOM:0.22,WFC:0.52,PYPL:-0.28,UBER:0.82,
+  PFE:-0.38,LLY:0.58,RTX:0.18,AXP:0.42,BKNG:0.68,ISRG:0.28,SPGI:0.32,
+  LMT:0.12,MO:0.04,SO:0.02,
+};
+const SP500_ANNUAL=0.24;
+
+function buildBenchmark(holdings){
+  const months=['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr'];
+  const tv=holdings.reduce((a,b)=>a+b.value,0);
+
+  /* weighted portfolio monthly return */
+  const portMonthly=holdings.map(h=>{
+    const ann=STOCK_ANNUAL_RETURNS[h.t]||0.15;
+    const weight=h.value/tv;
+    return{weight,monthly:(1+ann)**(1/12)-1};
+  });
+
+  const portSeries=[100];
+  const spSeries=[100];
+  const spMonthly=(1+SP500_ANNUAL)**(1/12)-1;
+  for(let m=0;m<12;m++){
+    const portRet=portMonthly.reduce((a,h)=>a+h.weight*h.monthly,0);
+    portSeries.push(parseFloat((portSeries[portSeries.length-1]*(1+portRet)).toFixed(2)));
+    spSeries.push(parseFloat((spSeries[spSeries.length-1]*(1+spMonthly)).toFixed(2)));
+  }
+
+  const portReturn=((portSeries[12]-100)).toFixed(1);
+  const spReturn=((spSeries[12]-100)).toFixed(1);
+  const alpha=(portReturn-spReturn).toFixed(1);
+
+  const portColor=parseFloat(portReturn)>=0?'#c8f55a':'#f87171';
+  document.getElementById('bench-port-ret').textContent=(portReturn>=0?'+':'')+portReturn+'%';
+  document.getElementById('bench-port-ret').style.color=portColor;
+  document.getElementById('bench-sp-ret').textContent=(spReturn>=0?'+':'')+spReturn+'%';
+  const alphaEl=document.getElementById('bench-alpha');
+  alphaEl.textContent=(alpha>=0?'+':'')+alpha+'%';
+  alphaEl.style.color=parseFloat(alpha)>=0?'var(--accent)':'var(--red)';
+
+  document.getElementById('bench-section').style.display='block';
+  if(benchChart)benchChart.destroy();
+  benchChart=new Chart(document.getElementById('benchChart'),{
+    type:'line',
+    data:{
+      labels:months,
+      datasets:[
+        {label:'Your portfolio',data:portSeries,borderColor:'#c8f55a',borderWidth:2,pointRadius:0,tension:.4,fill:false},
+        {label:'S&P 500',data:spSeries,borderColor:'#60a5fa',borderWidth:2,pointRadius:0,tension:.4,borderDash:[4,4],fill:false},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${(ctx.raw-100).toFixed(1)}%`}}},
+      scales:{
+        x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#5c5c56',font:{size:11}}},
+        y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#5c5c56',font:{size:11},callback:v=>(v-100).toFixed(0)+'%'}}
+      }
+    }
+  });
+}
+
+/* hook into renderReport to trigger benchmark */
+const _origRender=renderReport;
+renderReport=function(holdings,sd,ai){
+  _origRender(holdings,sd,ai);
+  buildBenchmark(holdings);
+};
 </script>
 </body>
 </html>
