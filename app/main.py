@@ -2,7 +2,7 @@ from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from typing import Optional
-import io, csv, json, asyncio
+import io, csv, json, asyncio, os, time, requests as req_lib
 
 from app.screener import screen_stocks, get_stock_info, DEFAULT_TICKERS
 from app.models import ScreenResponse, StockData, BacktestResult
@@ -17,6 +17,64 @@ app.add_middleware(
     allow_methods=["GET"],
     allow_headers=["*"],
 )
+
+# ── Finnhub market-data proxy ─────────────────────────────────────
+FINNHUB_KEY = os.environ.get("FINNHUB_KEY", "")
+WATCHLIST = [
+    "AAPL","MSFT","NVDA","TSLA","META","AMZN","GOOGL",
+    "AMD","PLTR","SPY","COIN","JPM","QQQ","GME","SMCI"
+]
+
+_mkt_cache = {}
+MKT_CACHE_TTL = 120  # seconds
+
+
+def _fetch_finnhub_quotes(tickers):
+    if not FINNHUB_KEY:
+        return []
+    results = []
+    for ticker in tickers:
+        try:
+            r = req_lib.get(
+                "https://finnhub.io/api/v1/quote",
+                params={"symbol": ticker, "token": FINNHUB_KEY},
+                timeout=5,
+            )
+            if r.status_code == 200:
+                d = r.json()
+                if d and d.get("c"):
+                    results.append({
+                        "ticker": ticker,
+                        "price": d["c"],
+                        "prev_close": d["pc"],
+                        "change_pct": d["dp"],
+                        "high": d["h"],
+                        "low": d["l"],
+                        "open": d["o"],
+                    })
+        except Exception:
+            pass
+    return results
+
+
+@app.get("/market-data")
+def market_data():
+    """Returns live quotes for the buzz watchlist via Finnhub. Key kept server-side."""
+    global _mkt_cache
+    now = time.time()
+    if _mkt_cache and (now - _mkt_cache.get("ts", 0)) < MKT_CACHE_TTL:
+        return _mkt_cache["data"]
+
+    if not FINNHUB_KEY:
+        raise HTTPException(status_code=503, detail="FINNHUB_KEY not configured on server")
+
+    quotes = _fetch_finnhub_quotes(WATCHLIST)
+    if not quotes:
+        raise HTTPException(status_code=503, detail="No data returned from Finnhub")
+
+    data = {"quotes": quotes, "source": "Finnhub", "ts": now}
+    _mkt_cache = {"ts": now, "data": data}
+    return data
 
 
 @app.get("/")
@@ -103,7 +161,6 @@ def export(format: str = "csv", min_pe: Optional[float] = None,
 
 @app.get("/debug/yfinance")
 def debug_yfinance():
-    """Test yfinance connectivity - shows exact errors."""
     import traceback
     results = {}
     try:
