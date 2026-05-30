@@ -2,11 +2,12 @@ from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from typing import Optional
-import io, csv, json
+import io, csv, json, asyncio
 
 from app.screener import screen_stocks, get_stock_info, DEFAULT_TICKERS
 from app.models import ScreenResponse, StockData, BacktestResult
 from app.backtester import backtest_ma_crossover
+from app.sentiment import get_trending_sentiment, get_ticker_sentiment
 
 app = FastAPI(title="Stock Screener API", version="1.0.0")
 
@@ -52,19 +53,25 @@ def backtest(ticker: str, period: str = "5y"):
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@app.get("/export")
-def export(format: str = "csv", min_pe: Optional[float] = None,
-           max_pe: Optional[float] = None, min_rsi: Optional[float] = None,
-           max_rsi: Optional[float] = None):
-    results = screen_stocks(DEFAULT_TICKERS, min_pe, max_pe, min_rsi, max_rsi)
-    if format == "json":
-        return StreamingResponse(io.StringIO(json.dumps(results, indent=2)),
-                                 media_type="application/json")
-    if not results:
-        raise HTTPException(status_code=404, detail="No results")
-    output = io.StringIO()
-    writer = csv.DictWriter(output, fieldnames=results[0].keys())
-    writer.writeheader()
-    writer.writerows(results)
-    output.seek(0)
-    return StreamingResponse(output, media_type="text/csv")
+@app.get("/trending")
+def trending(force: bool = False):
+    """
+    Returns top trending stocks with sentiment scores aggregated from
+    Reddit, StockTwits, and (optionally) Twitter/X and NewsAPI.
+    Results are cached for 60 seconds.
+    """
+    return get_trending_sentiment(force=force)
+
+
+@app.get("/trending/stream")
+async def trending_stream():
+    """
+    Server-Sent Events (SSE) endpoint — pushes updated sentiment data
+    every 60 seconds. Connect from the dashboard via EventSource.
+    """
+    async def generator():
+        while True:
+            try:
+                data = get_trending_sentiment()
+                yield f"data: {json.dumps(data)}\n\n"
+  
