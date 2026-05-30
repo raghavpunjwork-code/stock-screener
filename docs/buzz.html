@@ -17,11 +17,10 @@
   --amber:#f59e0b;--amber-bg:rgba(245,158,11,.1);
   --red:#f87171;--red-bg:rgba(248,113,113,.1);
   --blue:#60a5fa;--blue-bg:rgba(96,165,250,.1);
-  --r:8px;--rl:12px;--rxl:16px;
+  --r:8px;--rl:12px;
 }
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6}
 
-/* ── Topbar ── */
 .topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:54px;position:sticky;top:0;z-index:200}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
 .logo-mark{width:30px;height:30px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -42,78 +41,74 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .load-title{font-family:'DM Serif Display',serif;font-size:28px;margin-bottom:.4rem}
 .load-title em{font-style:italic;color:var(--accent)}
 .load-sub{font-size:14px;color:var(--text2);margin-bottom:2.5rem;max-width:380px}
-
 .progress-wrap{width:320px;max-width:90vw;margin:0 auto 1.5rem}
 .progress-track{height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;margin-bottom:1rem}
 .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),#a0d040);border-radius:2px;width:0;transition:width .6s ease}
-.progress-msg{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);min-height:18px;transition:opacity .3s}
+.progress-msg{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);min-height:18px}
 
-.load-steps{display:flex;flex-direction:column;gap:8px;margin-top:1.5rem;text-align:left;width:280px}
-.load-step{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text3);opacity:.4;transition:opacity .4s,color .4s}
-.load-step.active{opacity:1;color:var(--text2)}
-.load-step.done{opacity:1;color:var(--green)}
-.step-icon{width:18px;height:18px;border-radius:50%;border:1px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
-.load-step.active .step-icon{border-color:var(--accent);color:var(--accent);animation:spin .8s linear infinite}
-.load-step.done .step-icon{border-color:var(--green);color:var(--green)}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-.cold-note{margin-top:2rem;padding:12px 18px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);font-size:11px;color:var(--text3);line-height:1.7;max-width:340px}
-.cold-note strong{color:var(--amber)}
+/* ── Setup screen ── */
+#setup-screen{min-height:calc(100vh - 54px);display:none;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center}
+.setup-card{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;padding:2.5rem 2rem;max-width:440px;width:100%;text-align:left}
+.setup-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--accent);text-transform:uppercase;margin-bottom:.75rem}
+.setup-title{font-family:'DM Serif Display',serif;font-size:24px;margin-bottom:.5rem}
+.setup-sub{font-size:13px;color:var(--text2);margin-bottom:1.75rem;line-height:1.7}
+.setup-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:2rem}
+.setup-step{display:flex;align-items:flex-start;gap:12px;font-size:13px;color:var(--text2)}
+.step-num{width:22px;height:22px;border-radius:50%;background:var(--bg4);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:10px;font-family:'DM Mono',monospace;color:var(--accent);flex-shrink:0;margin-top:1px}
+.setup-step a{color:var(--accent);text-decoration:none}
+.setup-step a:hover{text-decoration:underline}
+.key-row{display:flex;gap:8px;margin-bottom:1rem}
+.key-input{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:10px 14px;font-size:13px;font-family:'DM Mono',monospace;color:var(--text);outline:none;transition:border-color .15s}
+.key-input:focus{border-color:var(--accent)}
+.key-input::placeholder{color:var(--text3)}
+.connect-btn{padding:10px 20px;background:var(--accent);color:#0b0c0b;border:none;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;transition:opacity .15s}
+.connect-btn:hover{opacity:.88}
+.connect-btn:disabled{opacity:.5;cursor:not-allowed}
+.setup-note{font-size:11px;color:var(--text3);line-height:1.7}
+.key-err{font-size:12px;color:var(--red);margin-top:.5rem;display:none}
 
 /* ── Error screen ── */
 #error-screen{min-height:calc(100vh - 54px);display:none;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;gap:1rem}
 .err-icon{font-size:40px}
 .err-title{font-family:'DM Serif Display',serif;font-size:22px}
 .err-body{font-size:13px;color:var(--text2);line-height:1.8;max-width:400px}
-.err-body code{font-family:'DM Mono',monospace;color:var(--accent);background:var(--bg3);padding:2px 6px;border-radius:4px}
 .retry-btn{padding:10px 24px;background:var(--accent);color:#0b0c0b;border:none;border-radius:var(--r);font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:.5rem}
 .retry-btn:hover{opacity:.88}
 
 /* ── Main content ── */
 #main-content{display:none;max-width:960px;margin:0 auto;padding:2rem 2rem 4rem}
-
 .page-header{margin-bottom:2rem}
 .page-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:.5rem}
 .page-title{font-family:'DM Serif Display',serif;font-size:32px;line-height:1.1;margin-bottom:.4rem}
 .page-title em{font-style:italic;color:var(--accent)}
 .page-meta{font-size:12px;color:var(--text3);font-family:'DM Mono',monospace;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:.75rem}
-.src-chip{padding:2px 10px;border-radius:4px;font-size:10px}
-.src-chip.on{background:var(--blue-bg);color:var(--blue);border:1px solid rgba(96,165,250,.3)}
-.src-chip.off{background:var(--bg3);color:var(--text3);border:1px solid var(--border)}
-
 .refresh-btn{padding:7px 16px;background:transparent;border:1px solid var(--border2);border-radius:var(--r);color:var(--text3);font-size:11px;font-family:'DM Mono',monospace;cursor:pointer;transition:all .15s}
 .refresh-btn:hover{border-color:var(--accent);color:var(--accent)}
-
-/* ── Stats bar ── */
 .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:2rem}
 .stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:16px 18px;text-align:center}
 .stat-val{font-family:'DM Mono',monospace;font-size:24px;font-weight:500;line-height:1}
 .stat-label{font-size:10px;color:var(--text3);margin-top:5px;text-transform:uppercase;letter-spacing:.06em}
-
-/* ── Ticker grid ── */
 .section-label{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
 .ticker-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:2.5rem}
-.ticker-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:16px 18px;transition:border-color .2s,transform .2s;cursor:default}
+.ticker-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:16px 18px;transition:border-color .2s,transform .2s}
 .ticker-card:hover{border-color:var(--border2);transform:translateY(-1px)}
-.tc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.tc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
 .tc-ticker{font-family:'DM Mono',monospace;font-size:18px;font-weight:500;color:var(--accent)}
 .tc-badge{font-size:9px;font-family:'DM Mono',monospace;font-weight:600;padding:3px 9px;border-radius:3px;letter-spacing:.06em;text-transform:uppercase}
 .tc-badge.bullish{background:var(--green-bg);color:var(--green)}
 .tc-badge.bearish{background:var(--red-bg);color:var(--red)}
 .tc-badge.neutral{background:var(--bg4);color:var(--text3);border:1px solid var(--border2)}
-.tc-mentions{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:10px}
+.tc-price{font-family:'DM Mono',monospace;font-size:13px;color:var(--text2);margin-bottom:8px}
 .sent-bar{display:flex;height:5px;border-radius:3px;overflow:hidden;margin-bottom:7px;gap:1px}
 .sb-bull{background:var(--green)}
 .sb-bear{background:var(--red)}
 .sb-neut{background:var(--bg5)}
-.sent-legend{display:flex;gap:10px;margin-bottom:10px}
+.sent-legend{display:flex;gap:10px}
 .sl-item{font-size:10px;font-family:'DM Mono',monospace;display:flex;align-items:center;gap:4px;color:var(--text3)}
 .sl-dot{width:5px;height:5px;border-radius:50%}
-.tc-stat{font-size:11px;color:var(--text2);font-family:'DM Mono',monospace;margin-top:4px}
-.tc-stat.up{color:var(--green)}
-.tc-stat.dn{color:var(--red)}
-
-/* ── Feed ── */
+.tc-chg{font-size:12px;font-family:'DM Mono',monospace;margin-top:8px;font-weight:500}
+.tc-chg.up{color:var(--green)}
+.tc-chg.dn{color:var(--red)}
 .feed-wrap{display:flex;flex-direction:column;gap:8px}
 .feed-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;transition:border-color .15s}
 .feed-card:hover{border-color:var(--border2)}
@@ -128,24 +123,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .sent-tag.negative{background:var(--red-bg);color:var(--red)}
 .sent-tag.neutral{background:var(--bg4);color:var(--text3)}
 .feed-text{font-size:13px;color:var(--text2);line-height:1.6}
-.feed-time{font-size:10px;color:var(--text3);margin-top:4px;font-family:'DM Mono',monospace}
-
 .empty-state{text-align:center;padding:3rem;color:var(--text2);font-size:13px;line-height:1.8}
 
-@media(max-width:700px){
-  .stats-bar{grid-template-columns:repeat(2,1fr)}
-  .ticker-grid{grid-template-columns:repeat(2,1fr)}
-  #main-content{padding:1.5rem 1rem 3rem}
-  .page-title{font-size:24px}
-}
-@media(max-width:420px){
-  .ticker-grid{grid-template-columns:1fr}
-}
+@media(max-width:700px){.stats-bar{grid-template-columns:repeat(2,1fr)}.ticker-grid{grid-template-columns:repeat(2,1fr)}#main-content{padding:1.5rem 1rem 3rem}.page-title{font-size:24px}}
+@media(max-width:420px){.ticker-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
-<!-- Topbar -->
 <nav class="topbar">
   <a class="logo" href="index.html">
     <div class="logo-mark">
@@ -166,7 +151,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   </div>
 </nav>
 
-<!-- ══ LOADING SCREEN ══════════════════════════════════════════ -->
+<!-- ══ LOADING ════════════════════════════════════════════════ -->
 <div id="loading-screen">
   <div class="load-icon">
     <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
@@ -175,311 +160,353 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     </svg>
   </div>
   <div class="load-title">Market <em>Buzz</em></div>
-  <div class="load-sub">Pulling live price and volume data to surface the market's hottest movers right now.</div>
-
+  <div class="load-sub" id="load-sub">Fetching live market data…</div>
   <div class="progress-wrap">
-    <div class="progress-track">
-      <div class="progress-fill" id="progress-fill"></div>
-    </div>
-    <div class="progress-msg" id="progress-msg">Fetching market data…</div>
-  </div>
-
-  <div class="load-steps">
-    <div class="load-step" id="step-0">
-      <div class="step-icon">◌</div>
-      <span>Connecting to Yahoo Finance</span>
-    </div>
-    <div class="load-step" id="step-1">
-      <div class="step-icon">◌</div>
-      <span>Fetching 15 tickers in parallel</span>
-    </div>
-    <div class="load-step" id="step-2">
-      <div class="step-icon">◌</div>
-      <span>Calculating price momentum</span>
-    </div>
-    <div class="load-step" id="step-3">
-      <div class="step-icon">◌</div>
-      <span>Scoring sentiment — bullish vs bearish</span>
-    </div>
-    <div class="load-step" id="step-4">
-      <div class="step-icon">◌</div>
-      <span>Building your live dashboard</span>
-    </div>
-  </div>
-
-  <div class="cold-note" id="cold-note" style="display:none">
-    <strong>Taking longer than expected.</strong><br>
-    Yahoo Finance may be rate-limiting requests. Hang tight — data usually loads within 10 seconds.
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="progress-msg" id="progress-msg">Connecting…</div>
   </div>
 </div>
 
-<!-- ══ ERROR SCREEN ════════════════════════════════════════════ -->
+<!-- ══ SETUP SCREEN ════════════════════════════════════════════ -->
+<div id="setup-screen">
+  <div class="setup-card">
+    <div class="setup-eyebrow">One-time setup</div>
+    <div class="setup-title">Connect market data</div>
+    <div class="setup-sub">PortfolioIQ needs a free Finnhub API key to fetch live stock data. Takes 30 seconds — free forever, no credit card.</div>
+    <div class="setup-steps">
+      <div class="setup-step">
+        <div class="step-num">1</div>
+        <div>Go to <a href="https://finnhub.io" target="_blank">finnhub.io</a> and click <strong style="color:var(--text)">"Get free API key"</strong></div>
+      </div>
+      <div class="setup-step">
+        <div class="step-num">2</div>
+        <div>Sign up with email (or Google/GitHub) — no credit card needed</div>
+      </div>
+      <div class="setup-step">
+        <div class="step-num">3</div>
+        <div>Copy your API key from the dashboard and paste it below</div>
+      </div>
+    </div>
+    <div class="key-row">
+      <input class="key-input" id="key-input" type="text" placeholder="Paste your Finnhub API key…" autocomplete="off" spellcheck="false">
+      <button class="connect-btn" id="connect-btn" onclick="saveKey()">Connect →</button>
+    </div>
+    <div class="key-err" id="key-err">Invalid key — check you copied the full key from finnhub.io</div>
+    <div class="setup-note">🔒 Your key is saved only in your browser (localStorage). It is never sent to any server other than Finnhub.</div>
+  </div>
+</div>
+
+<!-- ══ ERROR ══════════════════════════════════════════════════ -->
 <div id="error-screen">
   <div class="err-icon">⚠</div>
   <div class="err-title">Couldn't load market data</div>
-  <div class="err-body">
-    Yahoo Finance didn't respond — this can happen during market close or if you're behind a restrictive network.<br><br>
-    <strong style="color:var(--text)">Try:</strong><br>
-    Refreshing the page, disabling VPN/proxy, or waiting a few minutes and trying again.
-  </div>
+  <div class="err-body" id="err-body">Something went wrong. Please try again.</div>
   <button class="retry-btn" onclick="startLoad()">↺ Try again</button>
+  <button class="retry-btn" style="background:var(--bg3);color:var(--text2);margin-top:.25rem" onclick="showSetup()">⚙ Change API key</button>
 </div>
 
 <!-- ══ MAIN CONTENT ════════════════════════════════════════════ -->
 <div id="main-content">
-
   <div class="page-header">
     <div class="page-eyebrow">Live price momentum</div>
     <div class="page-title">Market <em>Buzz</em></div>
     <div class="page-meta">
       <span id="meta-updated">—</span>
       <span id="meta-posts">—</span>
-      <span id="meta-model">—</span>
-      <div style="display:flex;gap:6px;flex-wrap:wrap" id="src-chips"></div>
+      <span id="meta-src">Source: Finnhub</span>
     </div>
   </div>
-
-  <!-- Stats -->
-  <div class="stats-bar" id="stats-bar">
+  <div class="stats-bar">
     <div class="stat-card"><div class="stat-val" id="s-trending" style="color:var(--accent)">—</div><div class="stat-label">Trending stocks</div></div>
-    <div class="stat-card"><div class="stat-val" id="s-mentions">—</div><div class="stat-label">Volume spikes</div></div>
-    <div class="stat-card"><div class="stat-val" id="s-bull" style="color:var(--green)">—</div><div class="stat-label">Bullish tickers</div></div>
-    <div class="stat-card"><div class="stat-val" id="s-bear" style="color:var(--red)">—</div><div class="stat-label">Bearish tickers</div></div>
+    <div class="stat-card"><div class="stat-val" id="s-up" style="color:var(--green)">—</div><div class="stat-label">Up today</div></div>
+    <div class="stat-card"><div class="stat-val" id="s-bull" style="color:var(--green)">—</div><div class="stat-label">Bullish</div></div>
+    <div class="stat-card"><div class="stat-val" id="s-bear" style="color:var(--red)">—</div><div class="stat-label">Bearish</div></div>
   </div>
-
-  <!-- Ticker grid -->
-  <div class="section-label">Trending stocks — ranked by volume spike</div>
+  <div class="section-label">Trending stocks — ranked by momentum</div>
   <div class="ticker-grid" id="ticker-grid"></div>
-
-  <!-- Feed -->
-  <div class="section-label">Price momentum feed</div>
+  <div class="section-label">Momentum feed</div>
   <div class="feed-wrap" id="feed-wrap"></div>
-
-  <div style="margin-top:2rem;padding:1.5rem;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);font-size:11px;color:var(--text3);line-height:1.8">
-    ⓘ Sentiment derived from price momentum and volume spikes via Yahoo Finance. Ranked by abnormal volume vs 5-day average. Auto-refreshes every 5 minutes. Not financial advice.
+  <div style="margin-top:2rem;padding:1.5rem;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);font-size:11px;color:var(--text3);line-height:1.8;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap">
+    <span>ⓘ Sentiment derived from price momentum via Finnhub. Auto-refreshes every 5 minutes. Not financial advice.</span>
+    <button onclick="clearKey()" style="background:none;border:1px solid var(--border2);border-radius:5px;color:var(--text3);font-size:10px;font-family:'DM Mono',monospace;padding:4px 10px;cursor:pointer">⚙ Change API key</button>
   </div>
 </div>
 
 <script>
-/* ══════════════════════════════════════════════════════════════
-   Market Buzz — fully client-side, fetches Yahoo Finance directly.
-   No backend required. Browser requests to Yahoo Finance are not
-   IP-blocked (only server-side requests are).
-   ══════════════════════════════════════════════════════════════ */
-
 const WATCHLIST = [
   "AAPL","MSFT","NVDA","TSLA","META","AMZN","GOOGL",
   "AMD","PLTR","SPY","COIN","JPM","QQQ","GME","SMCI"
 ];
 
-const STEP_IDS = ['step-0','step-1','step-2','step-3','step-4'];
-const STEP_MSGS = [
-  'Connecting to Yahoo Finance…',
-  'Fetching 15 tickers in parallel…',
-  'Calculating price momentum…',
-  'Scoring sentiment — bullish vs bearish…',
-  'Building your live dashboard…',
-];
-const STEP_PCTS = [15, 35, 55, 75, 92];
-
+const LS_KEY = 'portfolioiq_finnhub_key';
 let refreshTimer = null;
 
-// ── Yahoo Finance chart API ─────────────────────────────────────
-async function fetchTicker(ticker) {
-  const url = 'https://query1.finance.yahoo.com/v8/finance/chart/' + ticker +
-              '?interval=1d&range=5d&includePrePost=false';
-  const r = await fetch(url, { headers: { Accept: 'application/json' } });
+// ── Screens ────────────────────────────────────────────────────
+function show(id) {
+  ['loading-screen','setup-screen','error-screen','main-content'].forEach(function(s) {
+    document.getElementById(s).style.display = 'none';
+  });
+  document.getElementById(id).style.display = (id === 'main-content') ? 'block' : 'flex';
+}
+
+function setLive(state) {
+  var dot = document.getElementById('live-dot');
+  var lbl = document.getElementById('live-label');
+  if (state === 'live') { dot.className='live-dot on'; lbl.textContent='Live'; }
+  else if (state === 'loading') { dot.className='live-dot loading'; lbl.textContent='Loading…'; }
+  else { dot.className='live-dot err'; lbl.textContent='Offline'; }
+}
+
+function setProgress(pct, msg) {
+  document.getElementById('progress-fill').style.width = pct + '%';
+  if (msg) document.getElementById('progress-msg').textContent = msg;
+}
+
+// ── Finnhub fetch ──────────────────────────────────────────────
+async function fetchFinnhub(ticker, key) {
+  var url = 'https://finnhub.io/api/v1/quote?symbol=' + ticker + '&token=' + key;
+  var r = await fetch(url);
   if (!r.ok) throw new Error('HTTP ' + r.status);
-  const json = await r.json();
-  const result = json && json.chart && json.chart.result && json.chart.result[0];
-  if (!result) throw new Error('No result');
-
-  const q = result.indicators.quote[0];
-  const closes = (q.close || []).filter(v => v != null);
-  const volumes = (q.volume || []).filter(v => v != null);
-  if (closes.length < 2) throw new Error('Not enough data');
-
-  const cur = closes[closes.length - 1];
-  const prev = closes[closes.length - 2];
-  const open5 = closes[0];
-  const change_pct = (cur - prev) / prev * 100;
-  const week_change = (cur - open5) / open5 * 100;
-
-  const currVol = volumes[volumes.length - 1] || 0;
-  const prevVols = volumes.slice(0, -1);
-  const avgVol = prevVols.length ? prevVols.reduce(function(a,b){return a+b;},0) / prevVols.length : currVol;
-  const vol_spike = avgVol > 0 ? currVol / avgVol : 1;
-
+  var d = await r.json();
+  // c=current, pc=prev close, dp=day change%, h=high, l=low, o=open
+  if (!d || d.c === 0 || d.c === undefined) throw new Error('No data for ' + ticker);
   return {
     ticker: ticker,
-    change_pct: change_pct,
-    week_change: week_change,
-    vol_spike: vol_spike,
-    price: cur,
-    volume: currVol,
+    price: d.c,
+    prev_close: d.pc,
+    change_pct: d.dp,     // day change %
+    high: d.h,
+    low: d.l,
+    open: d.o,
   };
 }
 
-// ── Sentiment from price momentum (mirrors Python logic) ────────
-function calcSentiment(m) {
-  var w = Math.min(m.vol_spike / 2, 2);
-  var score = Math.max(-1, Math.min(1, (m.change_pct / 10) * w));
+// ── Yahoo Finance fallback (works when user has YF cookies) ────
+async function fetchYahoo(ticker) {
+  var url = 'https://query1.finance.yahoo.com/v8/finance/chart/' + ticker +
+            '?interval=1d&range=5d&includePrePost=false';
+  var ctrl = new AbortController();
+  var tid = setTimeout(function(){ ctrl.abort(); }, 6000);
+  try {
+    var r = await fetch(url, { signal: ctrl.signal });
+    clearTimeout(tid);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    var json = await r.json();
+    var result = json && json.chart && json.chart.result && json.chart.result[0];
+    if (!result) throw new Error('No result');
+    var q = result.indicators.quote[0];
+    var closes = (q.close || []).filter(function(v){ return v != null; });
+    if (closes.length < 2) throw new Error('Insufficient data');
+    var cur = closes[closes.length - 1];
+    var prev = closes[closes.length - 2];
+    return {
+      ticker: ticker,
+      price: cur,
+      prev_close: prev,
+      change_pct: (cur - prev) / prev * 100,
+      high: cur, low: cur, open: prev,
+    };
+  } catch(e) {
+    clearTimeout(tid);
+    throw e;
+  }
+}
+
+// ── Sentiment from momentum ────────────────────────────────────
+function calcSentiment(chg) {
+  var score = Math.max(-1, Math.min(1, chg / 5));
   var label, bull, bear;
   if (score > 0.05) {
     label = 'bullish';
-    bull = Math.min(50 + Math.abs(m.change_pct) * 3, 90);
-    bear = Math.max(5, 25 - Math.abs(m.change_pct) * 2);
+    bull = Math.min(50 + Math.abs(chg) * 4, 90);
+    bear = Math.max(5, 25 - Math.abs(chg) * 2);
   } else if (score < -0.05) {
     label = 'bearish';
-    bear = Math.min(50 + Math.abs(m.change_pct) * 3, 90);
-    bull = Math.max(5, 25 - Math.abs(m.change_pct) * 2);
+    bear = Math.min(50 + Math.abs(chg) * 4, 90);
+    bull = Math.max(5, 25 - Math.abs(chg) * 2);
   } else {
     label = 'neutral'; bull = 35; bear = 35;
   }
   var neut = Math.max(0, 100 - bull - bear);
   return {
     label: label, score: score,
-    bull_pct: Math.round(bull * 10) / 10,
-    bear_pct: Math.round(bear * 10) / 10,
-    neut_pct: Math.round(neut * 10) / 10,
+    bull_pct: +bull.toFixed(1),
+    bear_pct: +bear.toFixed(1),
+    neut_pct: +neut.toFixed(1),
   };
 }
 
 function sign(v) { return (v >= 0 ? '+' : '') + v.toFixed(2); }
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 
-// ── Fetch all tickers and build data object ─────────────────────
-async function loadData() {
-  var settled = await Promise.allSettled(WATCHLIST.map(fetchTicker));
-  var trending = [];
-  settled.forEach(function(r) {
-    if (r.status !== 'fulfilled' || !r.value) return;
-    var m = r.value;
-    var s = calcSentiment(m);
+// ── Build data object from raw quotes ─────────────────────────
+function buildData(quotes, src) {
+  var trending = quotes.map(function(m) {
+    var s = calcSentiment(m.change_pct);
     var dir = m.change_pct >= 0 ? '↑' : '↓';
-    var feedText = dir + ' ' + sign(m.change_pct) + '% today'
-                 + ' · Vol spike ' + m.vol_spike.toFixed(1) + 'x'
-                 + ' · 5-day ' + sign(m.week_change) + '%';
-    trending.push({
+    var feedText = dir + ' ' + sign(m.change_pct) + '% today · $' + m.price.toFixed(2) +
+                  ' · prev close $' + m.prev_close.toFixed(2);
+    return {
       ticker: m.ticker,
-      mentions: Math.max(1, Math.round(m.vol_spike * 2)),
-      reddit_mentions: 0, stocktwits_mentions: 0, news_mentions: 0,
-      bullish_pct: s.bull_pct, bearish_pct: s.bear_pct, neutral_pct: s.neut_pct,
-      overall: s.label, score: s.score,
-      change_pct: Math.round(m.change_pct * 100) / 100,
-      week_change: Math.round(m.week_change * 100) / 100,
-      vol_spike: Math.round(m.vol_spike * 100) / 100,
-      price: Math.round(m.price * 100) / 100,
+      price: m.price,
+      change_pct: +m.change_pct.toFixed(2),
+      bullish_pct: s.bull_pct,
+      bearish_pct: s.bear_pct,
+      neutral_pct: s.neut_pct,
+      overall: s.label,
+      score: s.score,
       feed: [{
         text: feedText,
-        source: 'Yahoo Finance', sub: 'Price & Volume',
+        source: src, sub: 'Price',
         sentiment: s.label === 'bullish' ? 'positive' : s.label === 'bearish' ? 'negative' : 'neutral',
         url: 'https://finance.yahoo.com/quote/' + m.ticker,
         ts: new Date().toISOString(),
       }],
-    });
+    };
   });
-  trending.sort(function(a,b){ return b.vol_spike - a.vol_spike; });
+  // Sort by absolute change descending
+  trending.sort(function(a,b){ return Math.abs(b.change_pct) - Math.abs(a.change_pct); });
   return {
     trending: trending,
     last_updated: new Date().toISOString(),
     posts_analyzed: trending.length,
-    model: 'price-momentum',
-    sources: ['Yahoo Finance'],
-    sources_active: ['Yahoo Finance'],
+    source: src,
   };
 }
 
-// ── Loading animation ─────────────────────────────────────────
-function markStep(i, state) {
-  var el = document.getElementById(STEP_IDS[i]);
-  if (!el) return;
-  el.className = 'load-step ' + (state || '');
-  var icon = el.querySelector('.step-icon');
-  icon.textContent = state === 'done' ? '✓' : state === 'active' ? '↻' : '◌';
+// ── Load data ─────────────────────────────────────────────────
+async function loadData() {
+  var key = localStorage.getItem(LS_KEY);
+
+  // Try Yahoo Finance first (works if user has YF cookies)
+  setProgress(20, 'Trying Yahoo Finance…');
+  try {
+    var yahooResults = await Promise.allSettled(
+      WATCHLIST.slice(0, 3).map(fetchYahoo)
+    );
+    var yahooOk = yahooResults.filter(function(r){ return r.status === 'fulfilled'; });
+    if (yahooOk.length >= 2) {
+      // Yahoo works! Fetch all tickers
+      setProgress(50, 'Fetching all tickers from Yahoo Finance…');
+      var all = await Promise.allSettled(WATCHLIST.map(fetchYahoo));
+      var good = all.filter(function(r){ return r.status === 'fulfilled'; })
+                    .map(function(r){ return r.value; });
+      if (good.length >= 5) {
+        return buildData(good, 'Yahoo Finance');
+      }
+    }
+  } catch(e) {}
+
+  // Yahoo failed — need Finnhub key
+  if (!key) throw new Error('NEED_KEY');
+
+  setProgress(50, 'Fetching data from Finnhub…');
+  var results = await Promise.allSettled(
+    WATCHLIST.map(function(t){ return fetchFinnhub(t, key); })
+  );
+  var good = results.filter(function(r){ return r.status === 'fulfilled'; })
+                    .map(function(r){ return r.value; });
+
+  if (good.length === 0) {
+    // Key might be invalid — check first error
+    var firstErr = results.find(function(r){ return r.status === 'rejected'; });
+    if (firstErr && firstErr.reason && firstErr.reason.message.indexOf('401') >= 0) {
+      localStorage.removeItem(LS_KEY);
+      throw new Error('INVALID_KEY');
+    }
+    throw new Error('NO_DATA');
+  }
+
+  return buildData(good, 'Finnhub');
 }
 
-function setLive(state) {
-  var dot = document.getElementById('live-dot');
-  var lbl = document.getElementById('live-label');
-  var map = { live:['on','Live'], loading:['loading','Loading…'], err:['err','Offline'] };
-  var pair = map[state] || ['err','Unknown'];
-  dot.className = 'live-dot ' + pair[0];
-  lbl.textContent = pair[1];
-}
-
-// ── Boot / load ───────────────────────────────────────────────
+// ── Main load ─────────────────────────────────────────────────
 async function startLoad() {
   clearTimeout(refreshTimer);
   setLive('loading');
-  document.getElementById('loading-screen').style.display = 'flex';
-  document.getElementById('error-screen').style.display = 'none';
-  document.getElementById('main-content').style.display = 'none';
-  document.getElementById('progress-fill').style.width = '4%';
-  document.getElementById('cold-note').style.display = 'none';
-
-  STEP_IDS.forEach(function(_, i){ markStep(i, ''); });
-
-  // Animate steps while fetching
-  var step = 0;
-  var stepTimer = setInterval(function() {
-    if (step > 0) markStep(step - 1, 'done');
-    if (step < STEP_IDS.length) {
-      markStep(step, 'active');
-      document.getElementById('progress-fill').style.width = STEP_PCTS[step] + '%';
-      document.getElementById('progress-msg').textContent = STEP_MSGS[step];
-    }
-    step++;
-  }, 700);
-
-  // Show slow-note after 6s
-  var slowTimer = setTimeout(function() {
-    document.getElementById('cold-note').style.display = 'block';
-  }, 6000);
+  show('loading-screen');
+  setProgress(5, 'Starting up…');
 
   try {
     var data = await loadData();
-    clearInterval(stepTimer);
-    clearTimeout(slowTimer);
-
-    if (!data.trending.length) throw new Error('No data returned');
-
-    STEP_IDS.forEach(function(_, i){ markStep(i, 'done'); });
-    document.getElementById('progress-fill').style.width = '100%';
-    document.getElementById('progress-msg').textContent = 'Done!';
-
+    setProgress(100, 'Done!');
     setTimeout(function() {
-      document.getElementById('loading-screen').style.display = 'none';
-      document.getElementById('main-content').style.display = 'block';
+      show('main-content');
       setLive('live');
       renderDashboard(data);
-      // Silent refresh every 5 minutes
       refreshTimer = setTimeout(silentRefresh, 5 * 60 * 1000);
     }, 300);
-
   } catch(e) {
-    clearInterval(stepTimer);
-    clearTimeout(slowTimer);
-    console.error('Buzz error:', e);
-    document.getElementById('loading-screen').style.display = 'none';
-    document.getElementById('error-screen').style.display = 'flex';
-    setLive('err');
+    var msg = e.message || '';
+    if (msg === 'NEED_KEY') {
+      showSetup();
+    } else if (msg === 'INVALID_KEY') {
+      setLive('err');
+      show('error-screen');
+      document.getElementById('err-body').innerHTML =
+        'Your Finnhub API key appears to be invalid or expired.<br>Click "Change API key" below to enter a new one.';
+    } else {
+      setLive('err');
+      show('error-screen');
+      document.getElementById('err-body').textContent =
+        'Failed to load market data. Check your internet connection and try again.';
+    }
   }
 }
 
 async function silentRefresh() {
   try {
     var data = await loadData();
-    if (data.trending.length) {
-      renderDashboard(data);
-      setLive('live');
-    }
+    renderDashboard(data);
   } catch(_) {}
   refreshTimer = setTimeout(silentRefresh, 5 * 60 * 1000);
 }
 
 function forceRefresh() { startLoad(); }
 
-// ── Render dashboard ─────────────────────────────────────────
+// ── Setup / key management ────────────────────────────────────
+function showSetup() {
+  setLive('err');
+  show('setup-screen');
+  document.getElementById('key-err').style.display = 'none';
+  document.getElementById('key-input').value = '';
+}
+
+async function saveKey() {
+  var key = document.getElementById('key-input').value.trim();
+  if (!key) return;
+  var btn = document.getElementById('connect-btn');
+  btn.disabled = true;
+  btn.textContent = 'Verifying…';
+  document.getElementById('key-err').style.display = 'none';
+
+  // Validate key by fetching one ticker
+  try {
+    await fetchFinnhub('AAPL', key);
+    localStorage.setItem(LS_KEY, key);
+    btn.disabled = false;
+    btn.textContent = 'Connect →';
+    startLoad();
+  } catch(e) {
+    document.getElementById('key-err').style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Connect →';
+  }
+}
+
+function clearKey() {
+  localStorage.removeItem(LS_KEY);
+  showSetup();
+}
+
+// Allow Enter key in input
+document.getElementById('key-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') saveKey();
+});
+
+// ── Render dashboard ──────────────────────────────────────────
 function renderDashboard(data) {
   var trending = data.trending || [];
   var ts = new Date(data.last_updated).toLocaleTimeString('en-US', {
@@ -487,96 +514,67 @@ function renderDashboard(data) {
   });
 
   document.getElementById('meta-updated').textContent = 'Updated ' + ts;
-  document.getElementById('meta-posts').textContent = (data.posts_analyzed || 0) + ' tickers loaded';
-  document.getElementById('meta-model').textContent = 'Model: ' + (data.model || 'PRICE-MOMENTUM').toUpperCase();
+  document.getElementById('meta-posts').textContent = trending.length + ' tickers loaded';
+  document.getElementById('meta-src').textContent = 'Source: ' + (data.source || 'Finnhub');
 
-  // Source chips
-  var active = new Set(data.sources_active || []);
-  document.getElementById('src-chips').innerHTML =
-    ['Yahoo Finance', 'Reddit', 'StockTwits', 'News'].map(function(s) {
-      return '<span class="src-chip ' + (active.has(s) ? 'on' : 'off') + '">' +
-             s + (active.has(s) ? ' ✓' : ' ✕') + '</span>';
-    }).join('');
-
-  // Stats
-  var bullN = trending.filter(function(t){return t.overall==='bullish';}).length;
-  var bearN = trending.filter(function(t){return t.overall==='bearish';}).length;
-  var highVolN = trending.filter(function(t){return t.vol_spike >= 1.5;}).length;
+  var upN = trending.filter(function(t){ return t.change_pct > 0; }).length;
+  var bullN = trending.filter(function(t){ return t.overall === 'bullish'; }).length;
+  var bearN = trending.filter(function(t){ return t.overall === 'bearish'; }).length;
   document.getElementById('s-trending').textContent = trending.length;
-  document.getElementById('s-mentions').textContent = highVolN;
+  document.getElementById('s-up').textContent = upN;
   document.getElementById('s-bull').textContent = bullN;
   document.getElementById('s-bear').textContent = bearN;
 
-  // Ticker grid
   var grid = document.getElementById('ticker-grid');
-  if (!trending.length) {
-    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1">No ticker data loaded.<br><small>Try refreshing — Yahoo Finance may be temporarily unavailable.</small></div>';
-  } else {
-    grid.innerHTML = trending.slice(0, 12).map(function(t) {
-      var chgClass = t.change_pct >= 0 ? 'up' : 'dn';
-      return '<div class="ticker-card">' +
-        '<div class="tc-top">' +
-          '<div class="tc-ticker">' + esc(t.ticker) + '</div>' +
-          '<span class="tc-badge ' + t.overall + '">' + t.overall + '</span>' +
-        '</div>' +
-        '<div class="tc-mentions">Vol spike ' + t.vol_spike.toFixed(1) + 'x &nbsp;·&nbsp; $' + t.price.toFixed(2) + '</div>' +
-        '<div class="sent-bar">' +
-          '<div class="sb-bull" style="flex:' + t.bullish_pct + '"></div>' +
-          '<div class="sb-bear" style="flex:' + t.bearish_pct + '"></div>' +
-          '<div class="sb-neut" style="flex:' + t.neutral_pct + '"></div>' +
-        '</div>' +
-        '<div class="sent-legend">' +
-          '<span class="sl-item"><span class="sl-dot" style="background:var(--green)"></span>' + t.bullish_pct + '% bull</span>' +
-          '<span class="sl-item"><span class="sl-dot" style="background:var(--red)"></span>' + t.bearish_pct + '% bear</span>' +
-        '</div>' +
-        '<div class="tc-stat ' + chgClass + '">' + (t.change_pct >= 0 ? '+' : '') + t.change_pct.toFixed(2) + '% today</div>' +
-      '</div>';
-    }).join('');
-  }
+  grid.innerHTML = trending.slice(0, 15).map(function(t) {
+    var chgClass = t.change_pct >= 0 ? 'up' : 'dn';
+    return '<div class="ticker-card">' +
+      '<div class="tc-top">' +
+        '<div class="tc-ticker">' + esc(t.ticker) + '</div>' +
+        '<span class="tc-badge ' + t.overall + '">' + t.overall + '</span>' +
+      '</div>' +
+      '<div class="tc-price">$' + t.price.toFixed(2) + '</div>' +
+      '<div class="sent-bar">' +
+        '<div class="sb-bull" style="flex:' + t.bullish_pct + '"></div>' +
+        '<div class="sb-bear" style="flex:' + t.bearish_pct + '"></div>' +
+        '<div class="sb-neut" style="flex:' + t.neutral_pct + '"></div>' +
+      '</div>' +
+      '<div class="sent-legend">' +
+        '<span class="sl-item"><span class="sl-dot" style="background:var(--green)"></span>' + t.bullish_pct + '% bull</span>' +
+        '<span class="sl-item"><span class="sl-dot" style="background:var(--red)"></span>' + t.bearish_pct + '% bear</span>' +
+      '</div>' +
+      '<div class="tc-chg ' + chgClass + '">' + sign(t.change_pct) + '% today</div>' +
+    '</div>';
+  }).join('');
 
-  // Feed
   var allFeed = [];
   var seen = new Set();
   trending.forEach(function(t) {
     (t.feed || []).forEach(function(p) {
-      var k = (p.text || '').slice(0, 50);
+      var k = (p.text || '').slice(0,50);
       if (!seen.has(k)) { seen.add(k); allFeed.push(Object.assign({}, p, {ticker: t.ticker})); }
     });
   });
 
   var feedEl = document.getElementById('feed-wrap');
-  if (!allFeed.length) {
-    feedEl.innerHTML = '<div class="empty-state">No feed items yet.</div>';
-  } else {
-    feedEl.innerHTML = allFeed.slice(0, 20).map(function(p) {
-      var sc = p.sentiment === 'positive' ? 'positive' : p.sentiment === 'negative' ? 'negative' : 'neutral';
-      var sl = p.sentiment === 'positive' ? '↑ Bullish' : p.sentiment === 'negative' ? '↓ Bearish' : '→ Neutral';
-      var srcLabel = p.sub ? (p.source + ' · ' + p.sub) : (p.source || '');
-      var link = p.url ? '<a class="feed-link" href="' + esc(p.url) + '" target="_blank">↗ open</a>' : '';
-      var tsStr = p.ts ? new Date(p.ts).toLocaleTimeString('en-US', {hour:'2-digit',minute:'2-digit'}) : '';
-      return '<div class="feed-card">' +
-        '<div class="feed-top">' +
-          '<div class="feed-left">' +
-            '<span class="feed-ticker">$' + esc(p.ticker) + '</span>' +
-            '<span class="feed-source">' + esc(srcLabel) + '</span>' +
-            link +
-          '</div>' +
-          '<span class="sent-tag ' + sc + '">' + sl + '</span>' +
+  feedEl.innerHTML = allFeed.slice(0, 20).map(function(p) {
+    var sc = p.sentiment === 'positive' ? 'positive' : p.sentiment === 'negative' ? 'negative' : 'neutral';
+    var sl = p.sentiment === 'positive' ? '↑ Bullish' : p.sentiment === 'negative' ? '↓ Bearish' : '→ Neutral';
+    return '<div class="feed-card">' +
+      '<div class="feed-top">' +
+        '<div class="feed-left">' +
+          '<span class="feed-ticker">$' + esc(p.ticker) + '</span>' +
+          '<span class="feed-source">' + esc(p.source || '') + '</span>' +
+          '<a class="feed-link" href="' + esc(p.url) + '" target="_blank">↗ open</a>' +
         '</div>' +
-        '<div class="feed-text">' + esc(p.text || '') + '</div>' +
-        (tsStr ? '<div class="feed-time">' + tsStr + '</div>' : '') +
-      '</div>';
-    }).join('');
-  }
+        '<span class="sent-tag ' + sc + '">' + sl + '</span>' +
+      '</div>' +
+      '<div class="feed-text">' + esc(p.text || '') + '</div>' +
+    '</div>';
+  }).join('');
 }
 
-function esc(s) {
-  return String(s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-// ── Boot ──────────────────────────────────────────────────────
+// ── Boot ─────────────────────────────────────────────────────
 startLoad();
 </script>
 </body>
