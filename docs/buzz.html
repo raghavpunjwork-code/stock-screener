@@ -467,7 +467,7 @@ function renderDashboard(data) {
   // Ticker grid
   const grid = document.getElementById('ticker-grid');
   if (!trending.length) {
-    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1">No trending tickers found yet.<br><small>Reddit data may still be processing.</small></div>';
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1">No trending tickers found yet.<br><small>Price data may still be loading — try refreshing.</small></div>';
   } else {
     grid.innerHTML = trending.slice(0, 12).map(t => {
       const sources = [
