@@ -260,7 +260,64 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   .sh-price,.sh-value{display:none}
   .hero-title{font-size:34px}
   .main{padding:0 1rem 3rem}
+  .buzz-grid{grid-template-columns:1fr 1fr!important}
 }
+/* ── Market Buzz ── */
+.buzz-tab{padding:6px 14px;background:transparent;color:var(--text3);border:1px solid var(--border2);border-radius:20px;font-size:12px;font-family:'DM Mono',monospace;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px}
+.buzz-tab:hover,.buzz-tab.active{background:var(--accent);color:#0b0c0b;border-color:var(--accent)}
+.buzz-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.buzz-tab.active .buzz-dot{animation:ripple2 2s infinite}
+.buzz-live{display:flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase}
+.buzz-live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:ripple2 2s infinite}
+.buzz-live-dot.err{background:var(--red);animation:none}
+.buzz-live-dot.idle{background:var(--amber);animation:none}
+.buzz-meta{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);margin-top:3px}
+.buzz-sources{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.buzz-src-badge{font-size:10px;font-family:'DM Mono',monospace;padding:3px 10px;border-radius:4px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3)}
+.buzz-src-badge.on{background:var(--blue-bg);border-color:var(--blue);color:var(--blue)}
+.buzz-refresh{padding:6px 14px;background:transparent;border:1px solid var(--border2);border-radius:6px;color:var(--text3);font-size:11px;font-family:'DM Mono',monospace;cursor:pointer}
+.buzz-refresh:hover{border-color:var(--accent);color:var(--accent)}
+.buzz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:12px}
+.buzz-title{font-family:'DM Serif Display',serif;font-size:22px}
+.buzz-title-row{display:flex;align-items:center;gap:12px}
+.buzz-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.5rem}
+.bstat{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;text-align:center}
+.bstat-val{font-family:'DM Mono',monospace;font-size:18px;font-weight:500}
+.bstat-label{font-size:10px;color:var(--text3);margin-top:3px;text-transform:uppercase;letter-spacing:.05em}
+.buzz-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem}
+.buzz-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:14px 16px;transition:border-color .15s}
+.buzz-card:hover{border-color:var(--border2)}
+.buzz-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.buzz-ticker{font-family:'DM Mono',monospace;font-size:16px;font-weight:500;color:var(--accent)}
+.buzz-overall{font-size:9px;font-family:'DM Mono',monospace;font-weight:600;padding:3px 8px;border-radius:3px;letter-spacing:.06em;text-transform:uppercase}
+.buzz-overall.bullish{background:var(--green-bg);color:var(--green)}
+.buzz-overall.bearish{background:var(--red-bg);color:var(--red)}
+.buzz-overall.neutral{background:var(--bg4);color:var(--text3)}
+.buzz-mentions{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:8px}
+.sentiment-bar{display:flex;height:6px;border-radius:3px;overflow:hidden;margin-bottom:6px}
+.bar-bull{background:#4ade80}.bar-bear{background:#f87171}.bar-neut{background:#2a2b27}
+.sentiment-legend{display:flex;gap:10px}
+.s-leg{font-size:10px;font-family:'DM Mono',monospace;display:flex;align-items:center;gap:4px}
+.s-leg-dot{width:5px;height:5px;border-radius:50%}
+.buzz-icons{display:flex;gap:5px;margin-top:8px}
+.src-icon{font-size:9px;font-family:'DM Mono',monospace;padding:2px 6px;border-radius:3px;background:var(--bg4);color:var(--text3)}
+.src-icon.reddit{background:rgba(255,90,0,.1);color:#ff5a00}
+.src-icon.stocktwits{background:var(--blue-bg);color:var(--blue)}
+.buzz-feed-title{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.buzz-feed{display:flex;flex-direction:column;gap:8px}
+.feed-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px}
+.feed-item-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;gap:8px}
+.feed-source-row{display:flex;align-items:center;gap:8px}
+.feed-ticker-tag{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;color:var(--accent)}
+.feed-src{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3)}
+.feed-sent{font-size:9px;font-family:'DM Mono',monospace;font-weight:600;padding:2px 7px;border-radius:3px;text-transform:uppercase}
+.feed-sent.positive{background:var(--green-bg);color:var(--green)}
+.feed-sent.negative{background:var(--red-bg);color:var(--red)}
+.feed-sent.neutral{background:var(--bg4);color:var(--text3)}
+.feed-text{font-size:12px;color:var(--text2);line-height:1.55}
+.feed-ts{font-size:10px;color:var(--text3);margin-top:4px;font-family:'DM Mono',monospace}
+.buzz-empty{text-align:center;padding:4rem;color:var(--text3);font-size:13px;line-height:1.8}
+.buzz-loading{display:flex;flex-direction:column;align-items:center;padding:3rem;gap:1rem;color:var(--text3)}
 </style>
 </head>
 <body>
@@ -276,6 +333,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <span class="logo-name">PortfolioIQ</span>
   </div>
   <div class="topbar-r">
+    <button class="buzz-tab" id="buzz-toggle" onclick="toggleBuzz()">
+      <span class="buzz-dot"></span>
+      Market Buzz
+    </button>
     <span class="top-badge">S&amp;P 500 · Beta</span>
     <span class="clock" id="clock">--:--:--</span>
   </div>
@@ -315,6 +376,47 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   <div class="pulse-item">
     <span class="pulse-item-label">10Y Treasury</span>
     <span class="pulse-item-val" id="treasury-val">—</span>
+  </div>
+</div>
+
+<!-- Market Buzz Section (browser-only — calls Reddit + StockTwits directly) -->
+<div id="buzz-section" style="display:none">
+  <div style="max-width:900px;margin:0 auto;padding:1.5rem 2rem 4rem">
+    <div class="buzz-header">
+      <div>
+        <div class="buzz-title-row">
+          <div class="buzz-title">Market Buzz</div>
+          <div class="buzz-live">
+            <div class="buzz-live-dot idle" id="buzz-live-dot"></div>
+            <span id="buzz-live-label">Loading…</span>
+          </div>
+        </div>
+        <div class="buzz-meta" id="buzz-meta">Scanning Reddit · StockTwits · Sentiment analysis running…</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <div class="buzz-sources" id="buzz-sources">
+          <span class="buzz-src-badge on">Reddit ✓</span>
+          <span class="buzz-src-badge on">StockTwits ✓</span>
+          <span class="buzz-src-badge">Twitter/X ✕</span>
+          <span class="buzz-src-badge">News ✕</span>
+        </div>
+        <button class="buzz-refresh" onclick="buzzLoad(true)">↺ Refresh</button>
+      </div>
+    </div>
+    <div id="buzz-loading" class="buzz-loading">
+      <div class="spinner"></div>
+      <div style="font-family:'DM Mono',monospace;font-size:12px">Fetching social data…</div>
+    </div>
+    <div id="buzz-error" style="display:none" class="buzz-empty">
+      ⚠ Could not load data — Reddit or StockTwits may be temporarily unavailable. Try refreshing.
+    </div>
+    <div id="buzz-content" style="display:none">
+      <div class="buzz-stats" id="buzz-stats"></div>
+      <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">Trending stocks — ranked by social mention volume</div>
+      <div class="buzz-grid" id="buzz-grid"></div>
+      <div class="buzz-feed-title">Recent mentions</div>
+      <div class="buzz-feed" id="buzz-feed"></div>
+    </div>
   </div>
 </div>
 
@@ -880,176 +982,4 @@ function renderReport(holdings,sd,ai){
 
 function resetAll(){
   selected=[];renderChips();
-  document.getElementById('p1').style.display='';document.getElementById('p2').style.display='';
-  document.getElementById('p1').className='panel active';document.getElementById('p2').className='panel';
-  document.getElementById('b1').textContent='1';document.getElementById('b2').textContent='2';
-  document.getElementById('e1').style.display='none';document.getElementById('e2').style.display='none';
-  document.getElementById('sub1').textContent='Search by company name or ticker symbol';
-  document.getElementById('shares-grid').innerHTML='';document.getElementById('port-bar').style.display='none';
-  document.getElementById('report').classList.remove('show');document.getElementById('loading').classList.remove('show');
-  document.getElementById('bench-section').style.display='none';
-  if(benchChart){benchChart.destroy();benchChart=null;}
-  ['ls1','ls2','ls3','ls4'].forEach(id=>{const el=document.getElementById(id);el.classList.remove('vis','done');});
-  document.querySelectorAll('.tpl-card').forEach(c=>c.classList.remove('selected-tpl'));
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-</script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<script>
-
-/* ── Market Pulse Strip ── */
-async function fetchIndex(symbol){
-  try{
-    const r=await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1d`,{signal:AbortSignal.timeout(4000)});
-    if(!r.ok)throw new Error();
-    const d=await r.json();
-    const meta=d?.chart?.result?.[0]?.meta;
-    if(!meta)throw new Error();
-    return{price:meta.regularMarketPrice,prev:meta.chartPreviousClose||meta.previousClose,open:meta.marketState==='REGULAR'};
-  }catch{return null;}
-}
-
-async function loadPulse(){
-  const indices=[
-    {sym:'^GSPC',valId:'sp500-val',chgId:'sp500-chg'},
-    {sym:'^IXIC',valId:'nasdaq-val',chgId:'nasdaq-chg'},
-    {sym:'^DJI',valId:'dow-val',chgId:'dow-chg'},
-    {sym:'^VIX',valId:'vix-val',chgId:null},
-    {sym:'^TNX',valId:'treasury-val',chgId:null},
-  ];
-  const results=await Promise.all(indices.map(i=>fetchIndex(i.sym)));
-  results.forEach((r,i)=>{
-    if(!r)return;
-    const idx=indices[i];
-    const valEl=document.getElementById(idx.valId);
-    if(!valEl)return;
-    const isLarge=r.price>1000;
-    valEl.textContent=isLarge?r.price.toLocaleString('en-US',{maximumFractionDigits:0}):r.price.toFixed(idx.sym==='^TNX'?2:2);
-    if(idx.chgId){
-      const chg=((r.price-r.prev)/r.prev*100);
-      const chgEl=document.getElementById(idx.chgId);
-      if(chgEl){chgEl.textContent=(chg>=0?'+':'')+chg.toFixed(2)+'%';chgEl.className='pulse-item-chg '+(chg>=0?'pulse-up':'pulse-dn');}
-    }
-    if(idx.sym==='^VIX'){
-      const lbl=document.getElementById('vix-label');
-      if(lbl)lbl.textContent=r.price<15?'Low fear':r.price<25?'Moderate':r.price<35?'High fear':'Extreme';
-    }
-    if(idx.sym==='^GSPC'){
-      const isOpen=r.open;
-      const dot=document.getElementById('mkt-dot');const st=document.getElementById('mkt-status');
-      if(dot){dot.className='pulse-dot '+(isOpen?'open':'closed');}
-      if(st){st.textContent=isOpen?'Market Open':'Market Closed';st.className='pulse-status '+(isOpen?'open':'closed');}
-    }
-  });
-}
-loadPulse();
-
-/* ── Portfolio Templates ── */
-const TEMPLATES={
-  aggressive:{
-    stocks:['NVDA','MSFT','META','AMZN','GOOGL','AMD','TSLA','AVGO'],
-    shares:[5,10,8,12,15,20,10,3],
-  },
-  balanced:{
-    stocks:['AAPL','JPM','JNJ','V','XOM','WMT','HON','PG','AMZN','MSFT'],
-    shares:[10,15,20,12,18,25,14,16,8,8],
-  },
-  defensive:{
-    stocks:['KO','PG','MRK','NEE','WMT','JNJ','PEP','ABBV','SO','MO'],
-    shares:[30,20,15,25,20,18,22,14,35,28],
-  }
-};
-
-function loadTemplate(name){
-  document.querySelectorAll('.tpl-card').forEach(c=>c.classList.remove('selected-tpl'));
-  event.currentTarget.classList.add('selected-tpl');
-  const tpl=TEMPLATES[name];
-  selected=[];
-  tpl.stocks.forEach((t,i)=>{
-    const s=SP500.find(x=>x.t===t);
-    if(s)selected.push({...s,shares:tpl.shares[i],livePrice:null,src:'static'});
-  });
-  renderChips();
-  document.getElementById('search').value='';
-}
-
-/* ── Benchmark Chart ── */
-let benchChart=null;
-
-const STOCK_ANNUAL_RETURNS={
-  AAPL:0.48,MSFT:0.56,GOOGL:0.52,AMZN:0.82,NVDA:2.39,META:1.94,TSLA:-0.12,
-  'BRK-B':0.28,JPM:0.38,JNJ:0.08,V:0.21,PG:0.12,MA:0.18,HD:0.08,CVX:0.04,
-  MRK:0.32,ABBV:0.28,PEP:0.04,KO:0.06,AVGO:1.12,COST:0.52,MCD:0.14,WMT:0.72,
-  BAC:0.38,DIS:-0.08,ADBE:0.24,CRM:0.48,NFLX:0.88,INTC:-0.42,AMD:0.38,
-  QCOM:0.28,TXN:0.08,NEE:-0.08,UNH:0.12,TMO:0.18,AMGN:0.22,HON:0.14,
-  LOW:0.12,IBM:0.38,GS:0.52,CAT:0.38,SBUX:-0.18,BA:-0.22,MMM:0.28,
-  NKE:-0.12,GE:0.82,F:-0.08,XOM:0.22,WFC:0.52,PYPL:-0.28,UBER:0.82,
-  PFE:-0.38,LLY:0.58,RTX:0.18,AXP:0.42,BKNG:0.68,ISRG:0.28,SPGI:0.32,
-  LMT:0.12,MO:0.04,SO:0.02,
-};
-const SP500_ANNUAL=0.24;
-
-function buildBenchmark(holdings){
-  const months=['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr'];
-  const tv=holdings.reduce((a,b)=>a+b.value,0);
-
-  /* weighted portfolio monthly return */
-  const portMonthly=holdings.map(h=>{
-    const ann=STOCK_ANNUAL_RETURNS[h.t]||0.15;
-    const weight=h.value/tv;
-    return{weight,monthly:(1+ann)**(1/12)-1};
-  });
-
-  const portSeries=[100];
-  const spSeries=[100];
-  const spMonthly=(1+SP500_ANNUAL)**(1/12)-1;
-  for(let m=0;m<12;m++){
-    const portRet=portMonthly.reduce((a,h)=>a+h.weight*h.monthly,0);
-    portSeries.push(parseFloat((portSeries[portSeries.length-1]*(1+portRet)).toFixed(2)));
-    spSeries.push(parseFloat((spSeries[spSeries.length-1]*(1+spMonthly)).toFixed(2)));
-  }
-
-  const portReturn=((portSeries[12]-100)).toFixed(1);
-  const spReturn=((spSeries[12]-100)).toFixed(1);
-  const alpha=(portReturn-spReturn).toFixed(1);
-
-  const portColor=parseFloat(portReturn)>=0?'#c8f55a':'#f87171';
-  document.getElementById('bench-port-ret').textContent=(portReturn>=0?'+':'')+portReturn+'%';
-  document.getElementById('bench-port-ret').style.color=portColor;
-  document.getElementById('bench-sp-ret').textContent=(spReturn>=0?'+':'')+spReturn+'%';
-  const alphaEl=document.getElementById('bench-alpha');
-  alphaEl.textContent=(alpha>=0?'+':'')+alpha+'%';
-  alphaEl.style.color=parseFloat(alpha)>=0?'var(--accent)':'var(--red)';
-
-  document.getElementById('bench-section').style.display='block';
-  if(benchChart)benchChart.destroy();
-  benchChart=new Chart(document.getElementById('benchChart'),{
-    type:'line',
-    data:{
-      labels:months,
-      datasets:[
-        {label:'Your portfolio',data:portSeries,borderColor:'#c8f55a',borderWidth:2,pointRadius:0,tension:.4,fill:false},
-        {label:'S&P 500',data:spSeries,borderColor:'#60a5fa',borderWidth:2,pointRadius:0,tension:.4,borderDash:[4,4],fill:false},
-      ]
-    },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${(ctx.raw-100).toFixed(1)}%`}}},
-      scales:{
-        x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#5c5c56',font:{size:11}}},
-        y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#5c5c56',font:{size:11},callback:v=>(v-100).toFixed(0)+'%'}}
-      }
-    }
-  });
-}
-
-/* hook into renderReport to trigger benchmark */
-const _origRender=renderReport;
-renderReport=function(holdings,sd,ai){
-  _origRender(holdings,sd,ai);
-  buildBenchmark(holdings);
-};
-</script>
-</body>
-</html>
+  document.getElementById('p1').style.display='';document.getElement
