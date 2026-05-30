@@ -41,7 +41,7 @@ def screen(
 def get_stock(ticker: str):
     data = get_stock_info(ticker.upper())
     if not data:
-        raise HTTPException(status_code=404, detail=f"No data for {ticker}")
+        raise HTTPException(status_code=404, detail="No data for " + ticker)
     return StockData(**data)
 
 
@@ -55,23 +55,47 @@ def backtest(ticker: str, period: str = "5y"):
 
 @app.get("/trending")
 def trending(force: bool = False):
-    """
-    Returns top trending stocks with sentiment scores aggregated from
-    Reddit, StockTwits, and (optionally) Twitter/X and NewsAPI.
-    Results are cached for 60 seconds.
-    """
     return get_trending_sentiment(force=force)
 
 
 @app.get("/trending/stream")
 async def trending_stream():
-    """
-    Server-Sent Events (SSE) endpoint — pushes updated sentiment data
-    every 60 seconds. Connect from the dashboard via EventSource.
-    """
     async def generator():
         while True:
             try:
                 data = get_trending_sentiment()
-                yield f"data: {json.dumps(data)}\n\n"
-  
+                yield "data: " + json.dumps(data) + "\n\n"
+            except Exception as e:
+                yield "data: " + json.dumps({"error": str(e)}) + "\n\n"
+            await asyncio.sleep(60)
+    return StreamingResponse(
+        generator(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no", "Connection": "keep-alive"},
+    )
+
+
+@app.get("/sentiment/{ticker}")
+def ticker_sentiment(ticker: str):
+    try:
+        return get_ticker_sentiment(ticker.upper())
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/export")
+def export(format: str = "csv", min_pe: Optional[float] = None,
+           max_pe: Optional[float] = None, min_rsi: Optional[float] = None,
+           max_rsi: Optional[float] = None):
+    results = screen_stocks(DEFAULT_TICKERS, min_pe, max_pe, min_rsi, max_rsi)
+    if format == "json":
+        return StreamingResponse(io.StringIO(json.dumps(results, indent=2)),
+                                 media_type="application/json")
+    if not results:
+        raise HTTPException(status_code=404, detail="No results")
+    output = io.StringIO()
+    writer = csv.DictWriter(output, fieldnames=results[0].keys())
+    writer.writeheader()
+    writer.writerows(results)
+    output.seek(0)
+    return StreamingResponse(output, media_type="text/csv")
