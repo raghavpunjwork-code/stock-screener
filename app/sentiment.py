@@ -15,7 +15,7 @@ from typing import List, Dict, Optional
 import concurrent.futures
 
 # ── Watchlist ────────────────────────────────────────────────────────────────
-WATCHLIST = [
+WATCHLIST_FULL = [
     "AAPL", "MSFT", "NVDA", "GOOGL", "META", "AMZN", "TSLA",
     "AMD", "INTC", "QCOM", "AVGO", "ARM", "SMCI",
     "NFLX", "CRM", "ADBE", "ORCL",
@@ -39,7 +39,7 @@ def _fetch_stooq(ticker: str) -> Optional[dict]:
     symbol = ticker.lower() + ".us"
     url = f"https://stooq.com/q/d/l/?s={symbol}&i=d"
     try:
-        r = requests.get(url, headers=HEADERS, timeout=10)
+        r = requests.get(url, headers=HEADERS, timeout=5)
         if r.status_code != 200 or len(r.text) < 50:
             return None
 
@@ -166,9 +166,9 @@ def get_trending_sentiment(force: bool = False) -> dict:
     tickers = WATCHLIST + extra[:10]
 
     results = []
-    with concurrent.futures.ThreadPoolExecutor(max_workers=15) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
         futures = {executor.submit(_fetch_momentum, t): t for t in tickers}
-        for future in concurrent.futures.as_completed(futures, timeout=45):
+        for future in concurrent.futures.as_completed(futures, timeout=20):
             try:
                 m = future.result()
                 if m is None:
