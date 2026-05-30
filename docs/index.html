@@ -407,8 +407,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       <div class="spinner"></div>
       <div style="font-family:'DM Mono',monospace;font-size:12px">Fetching social data…</div>
     </div>
-    <div id="buzz-error" style="display:none" class="buzz-empty">
-      ⚠ Could not load data — Reddit or StockTwits may be temporarily unavailable. Try refreshing.
+    <div id="buzz-error" style="display:none;text-align:center;padding:3rem;color:var(--text);font-size:14px;line-height:2">
+      <div style="font-size:28px;margin-bottom:1rem">⚠</div>
+      <strong>Could not load social data.</strong><br>
+      <span style="color:var(--text2);font-size:12px">Reddit may be temporarily rate-limiting requests from this browser.<br>
+      Wait 30 seconds and click <span style="color:var(--accent)">↺ Refresh</span> to try again.</span>
     </div>
     <div id="buzz-content" style="display:none">
       <div class="buzz-stats" id="buzz-stats"></div>
@@ -977,9 +980,4 @@ function renderReport(holdings,sd,ai){
   if(holdings.length<5)recs.push({type:'info',icon:'i',title:'Increase number of holdings',desc:`${holdings.length} holding${holdings.length!==1?'s':''} creates high single-stock event risk. Modern Portfolio Theory suggests 10–15 uncorrelated positions for efficient risk reduction.`});
   if(!recs.length)recs.push({type:'info',icon:'i',title:'No major rebalancing actions needed',desc:'Portfolio is well-structured. Continue monitoring RSI and moving average signals for individual position updates as market conditions evolve.'});
   document.getElementById('recs').innerHTML=recs.map(r=>`<div class="rec ${r.type}"><div class="rec-icon">${r.icon}</div><div><div class="rec-title">${r.title}</div><div class="rec-desc">${r.desc}</div></div></div>`).join('');
-  if(ai.rebal)document.getElementById('rebal-ai').innerHTML=`<div class="ai-block"><div class="ai-block-label green">AI recommendation</div><div class="ai-prose">${ai.rebal}</div></div>`;
-}
-
-function resetAll(){
-  selected=[];renderChips();
-  document.getElementById('p1').style.display='';document.getElement
+  i
