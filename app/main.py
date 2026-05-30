@@ -99,3 +99,27 @@ def export(format: str = "csv", min_pe: Optional[float] = None,
     writer.writerows(results)
     output.seek(0)
     return StreamingResponse(output, media_type="text/csv")
+
+
+@app.get("/debug/yfinance")
+def debug_yfinance():
+    """Test yfinance connectivity - shows exact errors."""
+    import traceback
+    results = {}
+    try:
+        import yfinance as yf
+        results["import"] = "ok"
+        try:
+            t = yf.Ticker("AAPL")
+            h = t.history(period="2d")
+            results["history_rows"] = len(h)
+            if not h.empty:
+                results["latest_close"] = float(h["Close"].iloc[-1])
+            else:
+                results["history_error"] = "empty dataframe"
+        except Exception as e:
+            results["history_error"] = str(e)
+            results["history_traceback"] = traceback.format_exc()[-500:]
+    except Exception as e:
+        results["import_error"] = str(e)
+    return results
