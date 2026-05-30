@@ -162,50 +162,53 @@ def get_trending_sentiment(force: bool = False) -> dict:
         return _cache["data"]
 
     st_trending = _fetch_stocktwits_trending()
-    extra = [t for t in st_trending if t not in WATCHLIST]
-    tickers = WATCHLIST + extra[:10]
+    extra = [t for t in st_trending if t not in WATCHLIST_FULL]
+    tickers = WATCHLIST_FULL + extra[:10]
 
     results = []
-    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
-        futures = {executor.submit(_fetch_momentum, t): t for t in tickers}
-        for future in concurrent.futures.as_completed(futures, timeout=20):
-            try:
-                m = future.result()
-                if m is None:
-                    continue
-                sent = _sentiment_from_momentum(m)
-                mention_score = max(1, round(m["vol_spike"] * 2))
-                direction = "↑" if m["change_pct"] >= 0 else "↓"
-                feed_text = (
-                    f"{direction} {m['change_pct']:+.2f}% today"
-                    f" · Vol spike {m['vol_spike']:.1f}x"
-                    f" · 5-day {m['week_change']:+.2f}%"
-                )
-                results.append({
-                    "ticker": m["ticker"],
-                    "mentions": mention_score,
-                    "reddit_mentions": 0,
-                    "stocktwits_mentions": 1 if m["ticker"] in st_trending else 0,
-                    "news_mentions": 0,
-                    "bullish_pct": sent["bull_pct"],
-                    "bearish_pct": sent["bear_pct"],
-                    "neutral_pct": sent["neut_pct"],
-                    "overall": sent["label"],
-                    "score": sent["score"],
-                    "change_pct": m["change_pct"],
-                    "vol_spike": m["vol_spike"],
-                    "price": m["current_price"],
-                    "feed": [{
-                        "text": feed_text,
-                        "source": "Stooq / Yahoo Finance",
-                        "sub": "Price & Volume",
-                        "sentiment": sent["label"],
-                        "url": f"https://finance.yahoo.com/quote/{m['ticker']}",
-                        "ts": datetime.utcnow().isoformat() + "Z",
-                    }],
-                })
-            except Exception:
-                pass
+    try:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
+            futures = {executor.submit(_fetch_momentum, t): t for t in tickers}
+            for future in concurrent.futures.as_completed(futures, timeout=20):
+                try:
+                    m = future.result()
+                    if m is None:
+                        continue
+                    sent = _sentiment_from_momentum(m)
+                    mention_score = max(1, round(m["vol_spike"] * 2))
+                    direction = "↑" if m["change_pct"] >= 0 else "↓"
+                    feed_text = (
+                        f"{direction} {m['change_pct']:+.2f}% today"
+                        f" · Vol spike {m['vol_spike']:.1f}x"
+                        f" · 5-day {m['week_change']:+.2f}%"
+                    )
+                    results.append({
+                        "ticker": m["ticker"],
+                        "mentions": mention_score,
+                        "reddit_mentions": 0,
+                        "stocktwits_mentions": 1 if m["ticker"] in st_trending else 0,
+                        "news_mentions": 0,
+                        "bullish_pct": sent["bull_pct"],
+                        "bearish_pct": sent["bear_pct"],
+                        "neutral_pct": sent["neut_pct"],
+                        "overall": sent["label"],
+                        "score": sent["score"],
+                        "change_pct": m["change_pct"],
+                        "vol_spike": m["vol_spike"],
+                        "price": m["current_price"],
+                        "feed": [{
+                            "text": feed_text,
+                            "source": "Stooq / Yahoo Finance",
+                            "sub": "Price & Volume",
+                            "sentiment": sent["label"],
+                            "url": f"https://finance.yahoo.com/quote/{m['ticker']}",
+                            "ts": datetime.utcnow().isoformat() + "Z",
+                        }],
+                    })
+                except Exception:
+                    pass
+    except Exception:
+        pass  # TimeoutError or other — return whatever we collected
 
     results.sort(key=lambda x: x["vol_spike"], reverse=True)
     results = results[:20]
