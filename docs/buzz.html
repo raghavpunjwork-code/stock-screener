@@ -16,9 +16,12 @@
   --green:#4ade80;--green-bg:rgba(74,222,128,.1);
   --amber:#f59e0b;--amber-bg:rgba(245,158,11,.1);
   --red:#f87171;--red-bg:rgba(248,113,113,.1);
+  --blue:#60a5fa;--blue-bg:rgba(96,165,250,.1);
   --r:8px;--rl:12px;
 }
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6}
+
+/* ── Topbar ── */
 .topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:54px;position:sticky;top:0;z-index:200}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
 .logo-mark{width:30px;height:30px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -32,26 +35,29 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .live-dot.err{background:var(--red)}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(74,222,128,.4)}70%{box-shadow:0 0 0 6px rgba(74,222,128,0)}100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}}
 
+/* ── Loading ── */
 #loading-screen{min-height:calc(100vh - 54px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center}
 .load-icon{width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,var(--accent),#a0d040);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;animation:float 3s ease-in-out infinite}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 .load-title{font-family:'DM Serif Display',serif;font-size:28px;margin-bottom:.4rem}
 .load-title em{font-style:italic;color:var(--accent)}
 .load-sub{font-size:14px;color:var(--text2);margin-bottom:2rem;max-width:380px}
-.progress-wrap{width:320px;max-width:90vw;margin:0 auto}
+.progress-wrap{width:320px;max-width:90vw}
 .progress-track{height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;margin-bottom:.75rem}
 .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),#a0d040);border-radius:2px;width:0;transition:width .5s ease}
 .progress-msg{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)}
 .cold-note{margin-top:1.5rem;padding:12px 18px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);font-size:11px;color:var(--text3);line-height:1.7;max-width:340px;display:none}
 .cold-note strong{color:var(--amber)}
 
+/* ── Error ── */
 #error-screen{min-height:calc(100vh - 54px);display:none;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;gap:1rem}
 .err-icon{font-size:40px}
 .err-title{font-family:'DM Serif Display',serif;font-size:22px}
 .err-body{font-size:13px;color:var(--text2);line-height:1.8;max-width:400px}
-.retry-btn{padding:10px 24px;background:var(--accent);color:#0b0c0b;border:none;border-radius:var(--r);font-size:14px;font-weight:600;cursor:pointer;margin-top:.5rem}
+.retry-btn{padding:10px 24px;background:var(--accent);color:#0b0c0b;border:none;border-radius:var(--r);font-size:14px;font-weight:600;cursor:pointer}
 .retry-btn:hover{opacity:.88}
 
+/* ── Main ── */
 #main-content{display:none;max-width:960px;margin:0 auto;padding:2rem 2rem 4rem}
 .page-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:.5rem}
 .page-title{font-family:'DM Serif Display',serif;font-size:32px;line-height:1.1;margin-bottom:.4rem}
@@ -59,14 +65,19 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .page-meta{font-size:12px;color:var(--text3);font-family:'DM Mono',monospace;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:.75rem;margin-bottom:2rem}
 .refresh-btn{padding:7px 16px;background:transparent;border:1px solid var(--border2);border-radius:var(--r);color:var(--text3);font-size:11px;font-family:'DM Mono',monospace;cursor:pointer;transition:all .15s}
 .refresh-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── Stats ── */
 .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:2rem}
 .stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:16px 18px;text-align:center}
 .stat-val{font-family:'DM Mono',monospace;font-size:24px;font-weight:500;line-height:1}
 .stat-label{font-size:10px;color:var(--text3);margin-top:5px;text-transform:uppercase;letter-spacing:.06em}
+
+/* ── Ticker grid ── */
 .section-label{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
 .ticker-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:2.5rem}
-.ticker-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:16px 18px;transition:border-color .2s,transform .2s}
-.ticker-card:hover{border-color:var(--border2);transform:translateY(-1px)}
+.ticker-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:16px 18px;transition:border-color .2s,transform .2s;cursor:pointer}
+.ticker-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.ticker-card .hint{font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:8px;opacity:.6}
 .tc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
 .tc-ticker{font-family:'DM Mono',monospace;font-size:18px;font-weight:500;color:var(--accent)}
 .tc-badge{font-size:9px;font-family:'DM Mono',monospace;font-weight:600;padding:3px 9px;border-radius:3px;letter-spacing:.06em;text-transform:uppercase}
@@ -76,25 +87,66 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .tc-price{font-family:'DM Mono',monospace;font-size:13px;color:var(--text2);margin-bottom:8px}
 .sent-bar{display:flex;height:5px;border-radius:3px;overflow:hidden;margin-bottom:7px;gap:1px}
 .sb-bull{background:var(--green)}.sb-bear{background:var(--red)}.sb-neut{background:var(--bg5)}
-.sent-legend{display:flex;gap:10px;margin-bottom:8px}
+.sent-legend{display:flex;gap:10px;margin-bottom:6px}
 .sl-item{font-size:10px;font-family:'DM Mono',monospace;display:flex;align-items:center;gap:4px;color:var(--text3)}
 .sl-dot{width:5px;height:5px;border-radius:50%}
 .tc-chg{font-size:12px;font-family:'DM Mono',monospace;font-weight:500}
 .tc-chg.up{color:var(--green)}.tc-chg.dn{color:var(--red)}
-.feed-wrap{display:flex;flex-direction:column;gap:8px}
-.feed-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;transition:border-color .15s}
-.feed-card:hover{border-color:var(--border2)}
-.feed-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;gap:10px;flex-wrap:wrap}
-.feed-left{display:flex;align-items:center;gap:8px}
-.feed-ticker{font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:var(--accent)}
-.feed-source{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace}
-.feed-link{font-size:10px;color:var(--text3);text-decoration:none;font-family:'DM Mono',monospace}
-.feed-link:hover{color:var(--accent)}
-.sent-tag{font-size:9px;font-family:'DM Mono',monospace;font-weight:600;padding:3px 8px;border-radius:3px;text-transform:uppercase;flex-shrink:0}
-.sent-tag.positive{background:var(--green-bg);color:var(--green)}
-.sent-tag.negative{background:var(--red-bg);color:var(--red)}
-.sent-tag.neutral{background:var(--bg4);color:var(--text3)}
-.feed-text{font-size:13px;color:var(--text2);line-height:1.6}
+
+/* ── Detail panel (slide-in) ── */
+#detail-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:300;display:none;backdrop-filter:blur(2px)}
+#detail-panel{position:fixed;top:0;right:0;bottom:0;width:min(480px,100vw);background:var(--bg2);border-left:1px solid var(--border2);z-index:301;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow:hidden}
+#detail-panel.open{transform:translateX(0)}
+.dp-header{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.dp-ticker{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;color:var(--accent)}
+.dp-close{width:32px;height:32px;border-radius:6px;background:var(--bg4);border:1px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--text2);transition:all .15s}
+.dp-close:hover{background:var(--bg5);color:var(--text)}
+.dp-body{flex:1;overflow-y:auto;padding:20px}
+.dp-section{margin-bottom:20px}
+.dp-section-title{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+
+/* Price target */
+.pt-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.pt-label{font-size:12px;color:var(--text3)}
+.pt-val{font-family:'DM Mono',monospace;font-size:13px;color:var(--text)}
+.upside-pill{display:inline-block;padding:3px 10px;border-radius:4px;font-family:'DM Mono',monospace;font-size:12px;font-weight:600}
+.upside-pill.up{background:var(--green-bg);color:var(--green)}
+.upside-pill.dn{background:var(--red-bg);color:var(--red)}
+.pt-range{height:6px;background:var(--bg4);border-radius:3px;position:relative;margin:8px 0 4px}
+.pt-range-fill{position:absolute;height:100%;background:linear-gradient(90deg,var(--red),var(--amber),var(--green));border-radius:3px}
+.pt-range-marker{position:absolute;top:-3px;width:12px;height:12px;background:var(--accent);border-radius:50%;transform:translateX(-50%);border:2px solid var(--bg2)}
+.pt-range-labels{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:10px;color:var(--text3)}
+
+/* Analyst recs */
+.rec-bar-wrap{display:flex;height:20px;border-radius:4px;overflow:hidden;gap:1px;margin-bottom:6px}
+.rec-seg{display:flex;align-items:center;justify-content:center;font-size:9px;font-family:'DM Mono',monospace;font-weight:600;min-width:0;overflow:hidden}
+.rec-seg.sb{background:var(--green)}.rec-seg.b{background:rgba(74,222,128,.5)}.rec-seg.h{background:var(--bg5)}.rec-seg.s{background:rgba(248,113,113,.5)}.rec-seg.ss{background:var(--red)}
+.rec-legend{display:flex;gap:10px;flex-wrap:wrap}
+.rec-item{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);display:flex;align-items:center;gap:4px}
+.rec-dot{width:7px;height:7px;border-radius:2px}
+.consensus-chip{display:inline-block;padding:4px 12px;border-radius:5px;font-family:'DM Mono',monospace;font-size:11px;font-weight:600;margin-bottom:10px}
+.consensus-chip.buy{background:var(--green-bg);color:var(--green)}
+.consensus-chip.sell{background:var(--red-bg);color:var(--red)}
+.consensus-chip.hold{background:var(--amber-bg);color:var(--amber)}
+
+/* Key metrics grid */
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.metric-box{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:10px 12px}
+.metric-label{font-size:10px;color:var(--text3);margin-bottom:2px}
+.metric-val{font-family:'DM Mono',monospace;font-size:14px;color:var(--text);font-weight:500}
+.metric-val.pos{color:var(--green)}.metric-val.neg{color:var(--red)}.metric-val.neu{color:var(--amber)}
+
+/* News */
+.news-item{padding:10px 0;border-bottom:1px solid var(--border)}
+.news-item:last-child{border-bottom:none}
+.news-headline{font-size:13px;color:var(--text);line-height:1.5;margin-bottom:4px}
+.news-meta{display:flex;align-items:center;gap:8px;font-size:10px;color:var(--text3);font-family:'DM Mono',monospace}
+.news-link{color:var(--text3);text-decoration:none}
+.news-link:hover{color:var(--accent)}
+
+.dp-loading{text-align:center;padding:3rem;color:var(--text3);font-family:'DM Mono',monospace;font-size:12px}
+.dp-err{text-align:center;padding:2rem;color:var(--red);font-size:12px}
+.no-data{font-size:12px;color:var(--text3);font-style:italic}
 
 @media(max-width:700px){.stats-bar{grid-template-columns:repeat(2,1fr)}.ticker-grid{grid-template-columns:repeat(2,1fr)}#main-content{padding:1.5rem 1rem 3rem}.page-title{font-size:24px}}
 @media(max-width:420px){.ticker-grid{grid-template-columns:1fr}}
@@ -131,14 +183,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     </svg>
   </div>
   <div class="load-title">Market <em>Buzz</em></div>
-  <div class="load-sub">Fetching live price momentum for today's top movers.</div>
+  <div class="load-sub">Fetching live prices and analyst data…</div>
   <div class="progress-wrap">
     <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
     <div class="progress-msg" id="progress-msg">Connecting…</div>
   </div>
   <div class="cold-note" id="cold-note">
-    <strong>Server is waking up.</strong><br>
-    The backend sleeps when idle (free tier). This first load may take 30–60 seconds — hang tight.
+    <strong>Server is waking up.</strong><br>The backend sleeps when idle (free tier). This first load may take 30–60 seconds.
   </div>
 </div>
 
@@ -146,7 +197,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 <div id="error-screen">
   <div class="err-icon">⚠</div>
   <div class="err-title">Couldn't load market data</div>
-  <div class="err-body" id="err-body">The server didn't respond. It may still be waking up — wait 30 seconds and try again.</div>
+  <div class="err-body" id="err-body">The server didn't respond. Wait 30 seconds and try again.</div>
   <button class="retry-btn" onclick="startLoad()">↺ Try again</button>
 </div>
 
@@ -157,7 +208,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   <div class="page-meta">
     <span id="meta-updated">—</span>
     <span id="meta-count">—</span>
-    <span id="meta-src">—</span>
+    <span style="color:var(--text3)">· Click any card for analyst targets &amp; factors</span>
   </div>
 
   <div class="stats-bar">
@@ -167,14 +218,26 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <div class="stat-card"><div class="stat-val" id="s-bear" style="color:var(--red)">—</div><div class="stat-label">Bearish</div></div>
   </div>
 
-  <div class="section-label">Trending stocks — ranked by day move</div>
+  <div class="section-label">Trending stocks — click for analyst deep-dive</div>
   <div class="ticker-grid" id="ticker-grid"></div>
 
-  <div class="section-label">Momentum feed</div>
-  <div class="feed-wrap" id="feed-wrap"></div>
+  <div style="margin-top:1rem;padding:1.5rem;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);font-size:11px;color:var(--text3);line-height:1.8">
+    ⓘ Price data via Finnhub. Analyst targets and recommendations sourced from sell-side consensus. Auto-refreshes every 5 min. Not financial advice.
+  </div>
+</div>
 
-  <div style="margin-top:2rem;padding:1.5rem;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);font-size:11px;color:var(--text3);line-height:1.8">
-    ⓘ Sentiment derived from intraday price momentum via Finnhub. Auto-refreshes every 5 minutes. Not financial advice.
+<!-- DETAIL PANEL -->
+<div id="detail-overlay" onclick="closeDetail()"></div>
+<div id="detail-panel">
+  <div class="dp-header">
+    <div>
+      <div class="dp-ticker" id="dp-ticker">—</div>
+      <div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px" id="dp-price-line">—</div>
+    </div>
+    <button class="dp-close" onclick="closeDetail()">✕</button>
+  </div>
+  <div class="dp-body" id="dp-body">
+    <div class="dp-loading">Loading analyst data…</div>
   </div>
 </div>
 
@@ -184,186 +247,287 @@ let refreshTimer = null;
 
 function show(id) {
   ['loading-screen','error-screen','main-content'].forEach(function(s){
-    var el = document.getElementById(s);
-    el.style.display = 'none';
+    document.getElementById(s).style.display = 'none';
   });
-  var target = document.getElementById(id);
-  target.style.display = id === 'main-content' ? 'block' : 'flex';
+  var el = document.getElementById(id);
+  el.style.display = id === 'main-content' ? 'block' : 'flex';
+}
+function setLive(s) {
+  var dot = document.getElementById('live-dot'), lbl = document.getElementById('live-label');
+  if (s==='live'){dot.className='live-dot on';lbl.textContent='Live';}
+  else if(s==='loading'){dot.className='live-dot loading';lbl.textContent='Loading…';}
+  else{dot.className='live-dot err';lbl.textContent='Offline';}
+}
+function setProgress(p,m){
+  document.getElementById('progress-fill').style.width=p+'%';
+  if(m)document.getElementById('progress-msg').textContent=m;
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function sign(v){return(v>=0?'+':'')+v.toFixed(2);}
+function fmt(v,dec){return v!=null?Number(v).toFixed(dec||2):'—';}
+
+function calcSentiment(chg){
+  var score=Math.max(-1,Math.min(1,chg/5));
+  var label,bull,bear;
+  if(score>0.05){label='bullish';bull=Math.min(50+Math.abs(chg)*4,90);bear=Math.max(5,25-Math.abs(chg)*2);}
+  else if(score<-0.05){label='bearish';bear=Math.min(50+Math.abs(chg)*4,90);bull=Math.max(5,25-Math.abs(chg)*2);}
+  else{label='neutral';bull=35;bear=35;}
+  var neut=Math.max(0,100-bull-bear);
+  return{label:label,bull:+bull.toFixed(1),bear:+bear.toFixed(1),neut:+neut.toFixed(1)};
 }
 
-function setLive(state) {
-  var dot = document.getElementById('live-dot');
-  var lbl = document.getElementById('live-label');
-  if (state === 'live')    { dot.className = 'live-dot on';      lbl.textContent = 'Live'; }
-  else if (state === 'loading') { dot.className = 'live-dot loading'; lbl.textContent = 'Loading…'; }
-  else                     { dot.className = 'live-dot err';     lbl.textContent = 'Offline'; }
+async function fetchT(url,ms){
+  var ctrl=new AbortController();
+  var tid=setTimeout(function(){ctrl.abort();},ms||60000);
+  try{var r=await fetch(url,{signal:ctrl.signal});clearTimeout(tid);return r;}
+  catch(e){clearTimeout(tid);throw e;}
 }
 
-function setProgress(pct, msg) {
-  document.getElementById('progress-fill').style.width = pct + '%';
-  if (msg) document.getElementById('progress-msg').textContent = msg;
-}
-
-function calcSentiment(chg) {
-  var score = Math.max(-1, Math.min(1, chg / 5));
-  var label, bull, bear;
-  if (score > 0.05) {
-    label = 'bullish';
-    bull = Math.min(50 + Math.abs(chg) * 4, 90);
-    bear = Math.max(5, 25 - Math.abs(chg) * 2);
-  } else if (score < -0.05) {
-    label = 'bearish';
-    bear = Math.min(50 + Math.abs(chg) * 4, 90);
-    bull = Math.max(5, 25 - Math.abs(chg) * 2);
-  } else {
-    label = 'neutral'; bull = 35; bear = 35;
-  }
-  var neut = Math.max(0, 100 - bull - bear);
-  return { label: label, bull: +bull.toFixed(1), bear: +bear.toFixed(1), neut: +neut.toFixed(1) };
-}
-
-function sign(v) { return (v >= 0 ? '+' : '') + v.toFixed(2); }
-function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-async function fetchWithTimeout(url, ms) {
-  var ctrl = new AbortController();
-  var tid = setTimeout(function(){ ctrl.abort(); }, ms);
-  try {
-    var r = await fetch(url, { signal: ctrl.signal });
-    clearTimeout(tid);
-    return r;
-  } catch(e) {
-    clearTimeout(tid);
-    throw e;
-  }
-}
-
-async function loadData() {
-  // Strategy 1: Render /market-data (Finnhub key stored server-side)
-  setProgress(20, 'Connecting to server…');
-  try {
-    var r = await fetchWithTimeout(API + '/market-data', 60000);
-    if (r.ok) {
-      var json = await r.json();
-      if (json && json.quotes && json.quotes.length > 0) {
-        setProgress(90, 'Processing…');
-        return buildData(json.quotes, json.source || 'Finnhub');
-      }
-    }
-  } catch(e) {}
-
-  throw new Error('Could not load data from server');
-}
-
-function buildData(quotes, src) {
-  var trending = quotes.map(function(q) {
-    var s = calcSentiment(q.change_pct);
-    var dir = q.change_pct >= 0 ? '↑' : '↓';
-    return {
-      ticker: q.ticker,
-      price: q.price,
-      change_pct: +q.change_pct.toFixed(2),
-      overall: s.label,
-      bull: s.bull, bear: s.bear, neut: s.neut,
-      feedText: dir + ' ' + sign(q.change_pct) + '% today · $' + q.price.toFixed(2),
-      url: 'https://finance.yahoo.com/quote/' + q.ticker,
-    };
+// ── Load main market data ─────────────────────────────────────
+async function loadData(){
+  setProgress(20,'Connecting to server…');
+  var r=await fetchT(API+'/market-data',65000);
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  var json=await r.json();
+  if(!json||!json.quotes||!json.quotes.length)throw new Error('No data');
+  setProgress(90,'Processing…');
+  var trending=json.quotes.map(function(q){
+    var s=calcSentiment(q.change_pct);
+    return{ticker:q.ticker,price:q.price,change_pct:+q.change_pct.toFixed(2),
+           overall:s.label,bull:s.bull,bear:s.bear,neut:s.neut};
   });
-  trending.sort(function(a,b){ return Math.abs(b.change_pct) - Math.abs(a.change_pct); });
-  return { trending: trending, source: src, ts: new Date().toISOString() };
+  trending.sort(function(a,b){return Math.abs(b.change_pct)-Math.abs(a.change_pct);});
+  return{trending:trending,ts:new Date().toISOString()};
 }
 
-async function startLoad() {
+async function startLoad(){
   clearTimeout(refreshTimer);
-  setLive('loading');
-  show('loading-screen');
-  setProgress(5, 'Waking up server…');
-  document.getElementById('cold-note').style.display = 'none';
-
-  var coldTimer = setTimeout(function(){
-    document.getElementById('cold-note').style.display = 'block';
-    setProgress(30, 'Server waking up — please wait…');
-  }, 8000);
-
-  try {
-    var data = await loadData();
+  setLive('loading');show('loading-screen');setProgress(5,'Waking up server…');
+  document.getElementById('cold-note').style.display='none';
+  var coldTimer=setTimeout(function(){
+    document.getElementById('cold-note').style.display='block';
+    setProgress(25,'Server waking up — please wait…');
+  },8000);
+  try{
+    var data=await loadData();
     clearTimeout(coldTimer);
-    setProgress(100, 'Done!');
-    setTimeout(function() {
-      show('main-content');
-      setLive('live');
-      renderDashboard(data);
-      refreshTimer = setTimeout(function(){ silentRefresh(); }, 5 * 60 * 1000);
-    }, 300);
-  } catch(e) {
-    clearTimeout(coldTimer);
-    setLive('err');
-    show('error-screen');
-    document.getElementById('err-body').textContent =
-      'The server didn\'t respond. It may be waking up (free tier). Wait 30 seconds and try again.';
+    setProgress(100,'Done!');
+    setTimeout(function(){
+      show('main-content');setLive('live');renderDashboard(data);
+      refreshTimer=setTimeout(function(){silentRefresh();},5*60*1000);
+    },300);
+  }catch(e){
+    clearTimeout(coldTimer);setLive('err');show('error-screen');
   }
 }
 
-async function silentRefresh() {
-  try {
-    var data = await loadData();
-    renderDashboard(data);
-  } catch(_) {}
-  refreshTimer = setTimeout(function(){ silentRefresh(); }, 5 * 60 * 1000);
+async function silentRefresh(){
+  try{var data=await loadData();renderDashboard(data);}catch(_){}
+  refreshTimer=setTimeout(function(){silentRefresh();},5*60*1000);
 }
 
-function renderDashboard(data) {
-  var t = data.trending || [];
-  var ts = new Date(data.ts).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  document.getElementById('meta-updated').textContent = 'Updated ' + ts;
-  document.getElementById('meta-count').textContent = t.length + ' tickers';
-  document.getElementById('meta-src').textContent = 'Source: ' + (data.source || 'Finnhub');
+function renderDashboard(data){
+  var t=data.trending||[];
+  var ts=new Date(data.ts).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  document.getElementById('meta-updated').textContent='Updated '+ts;
+  document.getElementById('meta-count').textContent=t.length+' tickers loaded';
+  document.getElementById('s-total').textContent=t.length;
+  document.getElementById('s-up').textContent=t.filter(function(x){return x.change_pct>0;}).length;
+  document.getElementById('s-bull').textContent=t.filter(function(x){return x.overall==='bullish';}).length;
+  document.getElementById('s-bear').textContent=t.filter(function(x){return x.overall==='bearish';}).length;
 
-  var upN = t.filter(function(x){return x.change_pct>0;}).length;
-  var bullN = t.filter(function(x){return x.overall==='bullish';}).length;
-  var bearN = t.filter(function(x){return x.overall==='bearish';}).length;
-  document.getElementById('s-total').textContent = t.length;
-  document.getElementById('s-up').textContent = upN;
-  document.getElementById('s-bull').textContent = bullN;
-  document.getElementById('s-bear').textContent = bearN;
-
-  document.getElementById('ticker-grid').innerHTML = t.map(function(x){
-    var cls = x.change_pct >= 0 ? 'up' : 'dn';
-    return '<div class="ticker-card">' +
-      '<div class="tc-top"><div class="tc-ticker">' + esc(x.ticker) + '</div>' +
-      '<span class="tc-badge ' + x.overall + '">' + x.overall + '</span></div>' +
-      '<div class="tc-price">$' + x.price.toFixed(2) + '</div>' +
+  document.getElementById('ticker-grid').innerHTML=t.map(function(x){
+    var cls=x.change_pct>=0?'up':'dn';
+    return '<div class="ticker-card" onclick="openDetail(\''+esc(x.ticker)+'\','+x.price+','+x.change_pct+')">' +
+      '<div class="tc-top"><div class="tc-ticker">'+esc(x.ticker)+'</div>' +
+      '<span class="tc-badge '+x.overall+'">'+x.overall+'</span></div>' +
+      '<div class="tc-price">$'+x.price.toFixed(2)+'</div>' +
       '<div class="sent-bar">' +
-        '<div class="sb-bull" style="flex:' + x.bull + '"></div>' +
-        '<div class="sb-bear" style="flex:' + x.bear + '"></div>' +
-        '<div class="sb-neut" style="flex:' + x.neut + '"></div>' +
+        '<div class="sb-bull" style="flex:'+x.bull+'"></div>' +
+        '<div class="sb-bear" style="flex:'+x.bear+'"></div>' +
+        '<div class="sb-neut" style="flex:'+x.neut+'"></div>' +
       '</div>' +
       '<div class="sent-legend">' +
-        '<span class="sl-item"><span class="sl-dot" style="background:var(--green)"></span>' + x.bull + '% bull</span>' +
-        '<span class="sl-item"><span class="sl-dot" style="background:var(--red)"></span>' + x.bear + '% bear</span>' +
+        '<span class="sl-item"><span class="sl-dot" style="background:var(--green)"></span>'+x.bull+'% bull</span>' +
+        '<span class="sl-item"><span class="sl-dot" style="background:var(--red)"></span>'+x.bear+'% bear</span>' +
       '</div>' +
-      '<div class="tc-chg ' + cls + '">' + sign(x.change_pct) + '% today</div>' +
-    '</div>';
-  }).join('');
-
-  document.getElementById('feed-wrap').innerHTML = t.map(function(x){
-    var sc = x.overall === 'bullish' ? 'positive' : x.overall === 'bearish' ? 'negative' : 'neutral';
-    var sl = x.overall === 'bullish' ? '↑ Bullish' : x.overall === 'bearish' ? '↓ Bearish' : '→ Neutral';
-    return '<div class="feed-card">' +
-      '<div class="feed-top">' +
-        '<div class="feed-left">' +
-          '<span class="feed-ticker">$' + esc(x.ticker) + '</span>' +
-          '<span class="feed-source">Finnhub · Price</span>' +
-          '<a class="feed-link" href="' + esc(x.url) + '" target="_blank">↗ open</a>' +
-        '</div>' +
-        '<span class="sent-tag ' + sc + '">' + sl + '</span>' +
-      '</div>' +
-      '<div class="feed-text">' + esc(x.feedText) + '</div>' +
+      '<div class="tc-chg '+cls+'">'+sign(x.change_pct)+'% today</div>' +
+      '<div class="hint">↗ tap for analyst targets</div>' +
     '</div>';
   }).join('');
 }
+
+// ── Detail panel ─────────────────────────────────────────────
+function openDetail(ticker, price, changePct){
+  document.getElementById('dp-ticker').textContent=ticker;
+  var cls=changePct>=0?'color:var(--green)':'color:var(--red)';
+  document.getElementById('dp-price-line').innerHTML=
+    '$'+price.toFixed(2)+' &nbsp;<span style="'+cls+';font-family:\'DM Mono\',monospace">'+sign(changePct)+'% today</span>';
+  document.getElementById('dp-body').innerHTML='<div class="dp-loading">Loading analyst data…</div>';
+  document.getElementById('detail-overlay').style.display='block';
+  requestAnimationFrame(function(){
+    document.getElementById('detail-panel').classList.add('open');
+  });
+  document.body.style.overflow='hidden';
+  fetchDetail(ticker, price);
+}
+
+function closeDetail(){
+  document.getElementById('detail-panel').classList.remove('open');
+  setTimeout(function(){
+    document.getElementById('detail-overlay').style.display='none';
+    document.body.style.overflow='';
+  },300);
+}
+
+async function fetchDetail(ticker, currentPrice){
+  try{
+    var r=await fetchT(API+'/stock-detail/'+ticker,30000);
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    var d=await r.json();
+    renderDetail(d, currentPrice);
+  }catch(e){
+    document.getElementById('dp-body').innerHTML='<div class="dp-err">Could not load analyst data.<br>Server may be waking up — try again in a moment.</div>';
+  }
+}
+
+function renderDetail(d, currentPrice){
+  var html='';
+
+  // ── Price Target ──────────────────────────────────────────
+  var pt=d.price_target;
+  html+='<div class="dp-section"><div class="dp-section-title">Analyst Price Target</div>';
+  if(pt&&pt.mean){
+    var upside=pt.upside_pct;
+    var uClass=upside>=0?'up':'dn';
+    var uSign=upside>=0?'↑ +':'↓ ';
+    html+='<div class="pt-row"><span class="pt-label">Consensus target</span>' +
+          '<span class="pt-val">$'+fmt(pt.mean,2)+'</span></div>';
+    if(upside!=null){
+      html+='<div class="pt-row"><span class="pt-label">vs current price</span>' +
+            '<span class="upside-pill '+uClass+'">'+uSign+Math.abs(upside).toFixed(1)+'% upside</span></div>';
+    }
+    // Range bar
+    if(pt.low&&pt.high){
+      var range=pt.high-pt.low;
+      var targetPos=range>0?Math.max(0,Math.min(100,(pt.mean-pt.low)/range*100)):50;
+      var curPos=range>0?Math.max(0,Math.min(100,(currentPrice-pt.low)/range*100)):50;
+      html+='<div style="margin-top:12px">' +
+            '<div class="pt-range"><div class="pt-range-fill" style="width:100%"></div>' +
+            '<div class="pt-range-marker" style="left:'+curPos+'%;background:var(--text2)" title="Current"></div>' +
+            '<div class="pt-range-marker" style="left:'+targetPos+'%" title="Target"></div>' +
+            '</div>' +
+            '<div class="pt-range-labels"><span>Low $'+fmt(pt.low,0)+'</span><span>High $'+fmt(pt.high,0)+'</span></div>' +
+            '<div style="font-size:10px;color:var(--text3);margin-top:6px;font-family:\'DM Mono\',monospace">' +
+            '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--text2);vertical-align:middle;margin-right:4px"></span>current &nbsp;' +
+            '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--accent);vertical-align:middle;margin-right:4px"></span>target</div>' +
+            '</div>';
+    }
+    html+='<div style="font-size:10px;color:var(--text3);font-family:\'DM Mono\',monospace;margin-top:8px">High $'+fmt(pt.high,2)+' · Low $'+fmt(pt.low,2)+(pt.last_updated?' · Updated '+pt.last_updated:'')+'</div>';
+  }else{
+    html+='<div class="no-data">No analyst targets available</div>';
+  }
+  html+='</div>';
+
+  // ── Analyst Recommendations ───────────────────────────────
+  var rec=d.recommendations;
+  html+='<div class="dp-section"><div class="dp-section-title">Analyst Recommendations</div>';
+  if(rec&&rec.total>0){
+    var conClass=rec.consensus.toLowerCase().indexOf('buy')>=0?'buy':rec.consensus.toLowerCase().indexOf('sell')>=0?'sell':'hold';
+    html+='<span class="consensus-chip '+conClass+'">'+esc(rec.consensus)+'</span>';
+    var total=rec.total;
+    var sbP=(rec.strong_buy/total*100).toFixed(0);
+    var bP=(rec.buy/total*100).toFixed(0);
+    var hP=(rec.hold/total*100).toFixed(0);
+    var sP=(rec.sell/total*100).toFixed(0);
+    var ssP=(rec.strong_sell/total*100).toFixed(0);
+    html+='<div class="rec-bar-wrap">' +
+      (rec.strong_buy?'<div class="rec-seg sb" style="flex:'+rec.strong_buy+'" title="Strong Buy '+rec.strong_buy+'">'+sbP+'%</div>':'')+
+      (rec.buy?'<div class="rec-seg b" style="flex:'+rec.buy+'" title="Buy '+rec.buy+'">'+bP+'%</div>':'')+
+      (rec.hold?'<div class="rec-seg h" style="flex:'+rec.hold+'" title="Hold '+rec.hold+'">'+hP+'%</div>':'')+
+      (rec.sell?'<div class="rec-seg s" style="flex:'+rec.sell+'" title="Sell '+rec.sell+'">'+sP+'%</div>':'')+
+      (rec.strong_sell?'<div class="rec-seg ss" style="flex:'+rec.strong_sell+'" title="Strong Sell '+rec.strong_sell+'">'+ssP+'%</div>':'')+
+    '</div>';
+    html+='<div class="rec-legend">' +
+      '<span class="rec-item"><span class="rec-dot" style="background:var(--green)"></span>Strong Buy '+rec.strong_buy+'</span>' +
+      '<span class="rec-item"><span class="rec-dot" style="background:rgba(74,222,128,.5)"></span>Buy '+rec.buy+'</span>' +
+      '<span class="rec-item"><span class="rec-dot" style="background:var(--bg5)"></span>Hold '+rec.hold+'</span>' +
+      '<span class="rec-item"><span class="rec-dot" style="background:rgba(248,113,113,.5)"></span>Sell '+rec.sell+'</span>' +
+      '<span class="rec-item"><span class="rec-dot" style="background:var(--red)"></span>Strong Sell '+rec.strong_sell+'</span>' +
+    '</div>';
+    if(rec.period)html+='<div style="font-size:10px;color:var(--text3);font-family:\'DM Mono\',monospace;margin-top:6px">Period: '+esc(rec.period)+' · '+rec.total+' analysts</div>';
+  }else{
+    html+='<div class="no-data">No recommendation data available</div>';
+  }
+  html+='</div>';
+
+  // ── Key Metrics ───────────────────────────────────────────
+  var m=d.metrics;
+  html+='<div class="dp-section"><div class="dp-section-title">Key Factors</div>';
+  if(m){
+    function metBox(label, val, cls){
+      cls=cls||'';
+      return '<div class="metric-box"><div class="metric-label">'+label+'</div><div class="metric-val '+cls+'">'+val+'</div></div>';
+    }
+    var rgClass='', rg='—';
+    if(m.revenue_growth_yoy!=null){
+      var rgNum=m.revenue_growth_yoy*100;
+      rg=(rgNum>=0?'+':'')+rgNum.toFixed(1)+'%';
+      rgClass=rgNum>0?'pos':'neg';
+    }
+    var gmStr=m.gross_margin!=null?m.gross_margin.toFixed(1)+'%':'—';
+    var mcStr='—';
+    if(m.market_cap){
+      var mc=m.market_cap;
+      mcStr=mc>=1000?'$'+(mc/1000).toFixed(1)+'T':'$'+mc.toFixed(0)+'B';
+    }
+    var dyStr=m.dividend_yield?m.dividend_yield.toFixed(2)+'%':'—';
+    var rsiStr=m.rsi14?m.rsi14.toFixed(0):'—';
+    var rsiClass=m.rsi14?(m.rsi14>70?'neg':m.rsi14<30?'pos':'neu'):'';
+    html+='<div class="metrics-grid">' +
+      metBox('P/E Ratio (TTM)', m.pe_ttm?fmt(m.pe_ttm,1):'—') +
+      metBox('EPS (TTM)', m.eps_ttm?'$'+fmt(m.eps_ttm,2):'—') +
+      metBox('Revenue Growth YoY', rg, rgClass) +
+      metBox('Gross Margin', gmStr) +
+      metBox('52-Week High', m.week52_high?'$'+fmt(m.week52_high,2):'—') +
+      metBox('52-Week Low', m.week52_low?'$'+fmt(m.week52_low,2):'—') +
+      metBox('Beta', m.beta?fmt(m.beta,2):'—') +
+      metBox('Market Cap', mcStr) +
+      metBox('Dividend Yield', dyStr) +
+      metBox('RSI (14)', rsiStr, rsiClass) +
+    '</div>';
+    if(m.rsi14){
+      var rsiNote=m.rsi14>70?'Overbought territory — momentum may slow':m.rsi14<30?'Oversold territory — potential bounce zone':'Neutral momentum zone';
+      html+='<div style="font-size:11px;color:var(--text3);margin-top:8px;padding:8px 10px;background:var(--bg3);border-radius:5px">RSI note: '+rsiNote+'</div>';
+    }
+  }else{
+    html+='<div class="no-data">No metrics available</div>';
+  }
+  html+='</div>';
+
+  // ── Recent News ───────────────────────────────────────────
+  var news=d.news||[];
+  html+='<div class="dp-section"><div class="dp-section-title">Recent News</div>';
+  if(news.length){
+    html+=news.map(function(n){
+      var dt=n.datetime?new Date(n.datetime*1000).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'';
+      return '<div class="news-item">' +
+        '<div class="news-headline">'+esc(n.headline)+'</div>' +
+        '<div class="news-meta"><span>'+esc(n.source||'')+'</span>' +
+        (dt?'<span>'+dt+'</span>':'')+
+        (n.url?'<a class="news-link" href="'+esc(n.url)+'" target="_blank">↗ read</a>':'')+
+        '</div></div>';
+    }).join('');
+  }else{
+    html+='<div class="no-data">No recent news found</div>';
+  }
+  html+='</div>';
+
+  document.getElementById('dp-body').innerHTML=html;
+}
+
+// Close on Escape
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeDetail();});
 
 startLoad();
 </script>

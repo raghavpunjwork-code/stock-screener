@@ -2,7 +2,9 @@ from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from typing import Optional
-import io, csv, json, asyncio, os, time, requests as req_lib
+import io, csv, json, asyncio, os, time
+import requests as req_lib
+from datetime import datetime, timedelta
 
 from app.screener import screen_stocks, get_stock_info, DEFAULT_TICKERS
 from app.models import ScreenResponse, StockData, BacktestResult
@@ -18,65 +20,176 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ── Finnhub market-data proxy ─────────────────────────────────────
 FINNHUB_KEY = os.environ.get("FINNHUB_KEY", "")
+FINNHUB_BASE = "https://finnhub.io/api/v1"
+
 WATCHLIST = [
     "AAPL","MSFT","NVDA","TSLA","META","AMZN","GOOGL",
     "AMD","PLTR","SPY","COIN","JPM","QQQ","GME","SMCI"
 ]
 
-_mkt_cache = {}
-MKT_CACHE_TTL = 120  # seconds
+_mkt_cache: dict = {}
+_detail_cache: dict = {}
+MKT_TTL = 120
+DETAIL_TTL = 3600  # 1 hour — analyst data doesn't change often
 
 
-def _fetch_finnhub_quotes(tickers):
+def fh_get(path: str, params: dict) -> dict:
+    """Call Finnhub API with key."""
     if not FINNHUB_KEY:
-        return []
-    results = []
-    for ticker in tickers:
-        try:
-            r = req_lib.get(
-                "https://finnhub.io/api/v1/quote",
-                params={"symbol": ticker, "token": FINNHUB_KEY},
-                timeout=5,
-            )
-            if r.status_code == 200:
-                d = r.json()
-                if d and d.get("c"):
-                    results.append({
-                        "ticker": ticker,
-                        "price": d["c"],
-                        "prev_close": d["pc"],
-                        "change_pct": d["dp"],
-                        "high": d["h"],
-                        "low": d["l"],
-                        "open": d["o"],
-                    })
-        except Exception:
-            pass
-    return results
+        raise HTTPException(503, "FINNHUB_KEY not configured")
+    params["token"] = FINNHUB_KEY
+    r = req_lib.get(FINNHUB_BASE + path, params=params, timeout=8)
+    r.raise_for_status()
+    return r.json()
 
 
+# ── /market-data ─────────────────────────────────────────────────
 @app.get("/market-data")
 def market_data():
-    """Returns live quotes for the buzz watchlist via Finnhub. Key kept server-side."""
+    """Live quotes for the buzz watchlist via Finnhub."""
     global _mkt_cache
     now = time.time()
-    if _mkt_cache and (now - _mkt_cache.get("ts", 0)) < MKT_CACHE_TTL:
+    if _mkt_cache and (now - _mkt_cache.get("ts", 0)) < MKT_TTL:
         return _mkt_cache["data"]
 
-    if not FINNHUB_KEY:
-        raise HTTPException(status_code=503, detail="FINNHUB_KEY not configured on server")
+    results = []
+    for ticker in WATCHLIST:
+        try:
+            d = fh_get("/quote", {"symbol": ticker})
+            if d and d.get("c"):
+                results.append({
+                    "ticker": ticker,
+                    "price": d["c"],
+                    "prev_close": d["pc"],
+                    "change_pct": d["dp"],
+                    "high": d["h"],
+                    "low": d["l"],
+                    "open": d["o"],
+                })
+        except Exception:
+            pass
 
-    quotes = _fetch_finnhub_quotes(WATCHLIST)
-    if not quotes:
-        raise HTTPException(status_code=503, detail="No data returned from Finnhub")
+    if not results:
+        raise HTTPException(503, "No data from Finnhub")
 
-    data = {"quotes": quotes, "source": "Finnhub", "ts": now}
+    data = {"quotes": results, "source": "Finnhub", "ts": now}
     _mkt_cache = {"ts": now, "data": data}
     return data
 
 
+# ── /stock-detail/{ticker} ────────────────────────────────────────
+@app.get("/stock-detail/{ticker}")
+def stock_detail(ticker: str):
+    """
+    Analyst price targets, recommendation trends, key metrics, and
+    recent news for a single ticker — all via Finnhub free tier.
+    Cached for 1 hour.
+    """
+    t = ticker.upper()
+    global _detail_cache
+    now = time.time()
+    if t in _detail_cache and (now - _detail_cache[t].get("ts", 0)) < DETAIL_TTL:
+        return _detail_cache[t]["data"]
+
+    result = {"ticker": t}
+
+    # 1. Price target
+    try:
+        pt = fh_get("/stock/price-target", {"symbol": t})
+        current = None
+        try:
+            q = fh_get("/quote", {"symbol": t})
+            current = q.get("c")
+        except Exception:
+            pass
+        upside = None
+        if current and pt.get("targetMean"):
+            upside = round((pt["targetMean"] - current) / current * 100, 1)
+        result["price_target"] = {
+            "mean": pt.get("targetMean"),
+            "high": pt.get("targetHigh"),
+            "low": pt.get("targetLow"),
+            "upside_pct": upside,
+            "last_updated": pt.get("lastUpdated"),
+        }
+    except Exception:
+        result["price_target"] = None
+
+    # 2. Analyst recommendations (most recent period)
+    try:
+        recs = fh_get("/stock/recommendation", {"symbol": t})
+        if recs:
+            latest = recs[0]
+            sb = latest.get("strongBuy", 0)
+            b  = latest.get("buy", 0)
+            h  = latest.get("hold", 0)
+            s  = latest.get("sell", 0)
+            ss = latest.get("strongSell", 0)
+            total = sb + b + h + s + ss
+            bull_pct = round((sb + b) / total * 100) if total else 0
+            bear_pct = round((s + ss) / total * 100) if total else 0
+            # consensus label
+            if bull_pct >= 60:
+                consensus = "Strong Buy" if sb / max(total,1) > 0.3 else "Buy"
+            elif bear_pct >= 50:
+                consensus = "Sell"
+            else:
+                consensus = "Hold"
+            result["recommendations"] = {
+                "strong_buy": sb, "buy": b, "hold": h,
+                "sell": s, "strong_sell": ss,
+                "total": total,
+                "bull_pct": bull_pct,
+                "bear_pct": bear_pct,
+                "consensus": consensus,
+                "period": latest.get("period"),
+            }
+    except Exception:
+        result["recommendations"] = None
+
+    # 3. Key metrics
+    try:
+        m = fh_get("/stock/metric", {"symbol": t, "metric": "all"})
+        met = m.get("metric", {})
+        result["metrics"] = {
+            "pe_ttm":             met.get("peBasicExclExtraTTM"),
+            "eps_ttm":            met.get("epsBasicExclExtraTTM"),
+            "revenue_growth_yoy": met.get("revenueGrowthTTMYoy"),
+            "gross_margin":       met.get("grossMarginTTM"),
+            "week52_high":        met.get("52WeekHigh"),
+            "week52_low":         met.get("52WeekLow"),
+            "beta":               met.get("beta"),
+            "market_cap":         met.get("marketCapitalization"),
+            "dividend_yield":     met.get("dividendYieldIndicatedAnnual"),
+            "rsi14":              met.get("rsi14"),
+        }
+    except Exception:
+        result["metrics"] = None
+
+    # 4. Recent news (last 7 days, up to 5 articles)
+    try:
+        to_date   = datetime.utcnow().strftime("%Y-%m-%d")
+        from_date = (datetime.utcnow() - timedelta(days=7)).strftime("%Y-%m-%d")
+        news = fh_get("/company-news", {"symbol": t, "from": from_date, "to": to_date})
+        result["news"] = [
+            {
+                "headline": n.get("headline", ""),
+                "source":   n.get("source", ""),
+                "url":      n.get("url", ""),
+                "datetime": n.get("datetime", 0),
+                "summary":  (n.get("summary") or "")[:200],
+            }
+            for n in (news or [])[:5]
+        ]
+    except Exception:
+        result["news"] = []
+
+    _detail_cache[t] = {"ts": now, "data": result}
+    return result
+
+
+# ── existing endpoints ────────────────────────────────────────────
 @app.get("/")
 def root():
     return {"status": "ok", "message": "Stock Screener API running"}
@@ -157,26 +270,3 @@ def export(format: str = "csv", min_pe: Optional[float] = None,
     writer.writerows(results)
     output.seek(0)
     return StreamingResponse(output, media_type="text/csv")
-
-
-@app.get("/debug/yfinance")
-def debug_yfinance():
-    import traceback
-    results = {}
-    try:
-        import yfinance as yf
-        results["import"] = "ok"
-        try:
-            t = yf.Ticker("AAPL")
-            h = t.history(period="2d")
-            results["history_rows"] = len(h)
-            if not h.empty:
-                results["latest_close"] = float(h["Close"].iloc[-1])
-            else:
-                results["history_error"] = "empty dataframe"
-        except Exception as e:
-            results["history_error"] = str(e)
-            results["history_traceback"] = traceback.format_exc()[-500:]
-    except Exception as e:
-        results["import_error"] = str(e)
-    return results
