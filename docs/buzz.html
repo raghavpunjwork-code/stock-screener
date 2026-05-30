@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Buzz — PortfolioIQ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0b0c0b;--bg2:#131412;--bg3:#1a1b18;--bg4:#222320;--bg5:#2a2b27;
+  --text:#ede9e0;--text2:#9a9890;--text3:#5c5c56;
+  --border:#242520;--border2:#32332e;
+  --accent:#c8f55a;
+  --green:#4ade80;--green-bg:rgba(74,222,128,.1);
+  --amber:#f59e0b;--amber-bg:rgba(245,158,11,.1);
+  --red:#f87171;--red-bg:rgba(248,113,113,.1);
+  --blue:#60a5fa;--blue-bg:rgba(96,165,250,.1);
+  --r:8px;--rl:12px;--rxl:16px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6}
+
+/* ── Topbar ── */
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:54px;position:sticky;top:0;z-index:200}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-mark{width:30px;height:30px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-name{font-family:'DM Serif Display',serif;font-size:17px;color:var(--text)}
+.back-btn{display:flex;align-items:center;gap:6px;font-size:12px;font-family:'DM Mono',monospace;color:var(--text3);text-decoration:none;padding:6px 12px;border:1px solid var(--border2);border-radius:6px;transition:all .15s}
+.back-btn:hover{color:var(--text);border-color:var(--text3)}
+.live-pill{display:flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--text3)}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);flex-shrink:0}
+.live-dot.on{background:var(--green);animation:pulse 2s infinite}
+.live-dot.loading{background:var(--amber);animation:pulse 1s infinite}
+.live-dot.err{background:var(--red)}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(74,222,128,.4)}70%{box-shadow:0 0 0 6px rgba(74,222,128,0)}100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}}
+
+/* ── Loading screen ── */
+#loading-screen{min-height:calc(100vh - 54px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center}
+.load-icon{width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,var(--accent),#a0d040);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.load-title{font-family:'DM Serif Display',serif;font-size:28px;margin-bottom:.4rem}
+.load-title em{font-style:italic;color:var(--accent)}
+.load-sub{font-size:14px;color:var(--text2);margin-bottom:2.5rem;max-width:380px}
+
+.progress-wrap{width:320px;max-width:90vw;margin:0 auto 1.5rem}
+.progress-track{height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;margin-bottom:1rem}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),#a0d040);border-radius:2px;width:0;transition:width .6s ease}
+.progress-msg{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);min-height:18px;transition:opacity .3s}
+
+.load-steps{display:flex;flex-direction:column;gap:8px;margin-top:1.5rem;text-align:left;width:280px}
+.load-step{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text3);opacity:.4;transition:opacity .4s,color .4s}
+.load-step.active{opacity:1;color:var(--text2)}
+.load-step.done{opacity:1;color:var(--green)}
+.step-icon{width:18px;height:18px;border-radius:50%;border:1px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
+.load-step.active .step-icon{border-color:var(--accent);color:var(--accent);animation:spin .8s linear infinite}
+.load-step.done .step-icon{border-color:var(--green);color:var(--green)}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.cold-note{margin-top:2rem;padding:12px 18px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);font-size:11px;color:var(--text3);line-height:1.7;max-width:340px}
+.cold-note strong{color:var(--amber)}
+
+/* ── Error screen ── */
+#error-screen{min-height:calc(100vh - 54px);display:none;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;gap:1rem}
+.err-icon{font-size:40px}
+.err-title{font-family:'DM Serif Display',serif;font-size:22px}
+.err-body{font-size:13px;color:var(--text2);line-height:1.8;max-width:400px}
+.err-body code{font-family:'DM Mono',monospace;color:var(--accent);background:var(--bg3);padding:2px 6px;border-radius:4px}
+.retry-btn{padding:10px 24px;background:var(--accent);color:#0b0c0b;border:none;border-radius:var(--r);font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:.5rem}
+.retry-btn:hover{opacity:.88}
+
+/* ── Main content ── */
+#main-content{display:none;max-width:960px;margin:0 auto;padding:2rem 2rem 4rem}
+
+.page-header{margin-bottom:2rem}
+.page-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:.5rem}
+.page-title{font-family:'DM Serif Display',serif;font-size:32px;line-height:1.1;margin-bottom:.4rem}
+.page-title em{font-style:italic;color:var(--accent)}
+.page-meta{font-size:12px;color:var(--text3);font-family:'DM Mono',monospace;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:.75rem}
+.src-chip{padding:2px 10px;border-radius:4px;font-size:10px}
+.src-chip.on{background:var(--blue-bg);color:var(--blue);border:1px solid rgba(96,165,250,.3)}
+.src-chip.off{background:var(--bg3);color:var(--text3);border:1px solid var(--border)}
+
+.refresh-btn{padding:7px 16px;background:transparent;border:1px solid var(--border2);border-radius:var(--r);color:var(--text3);font-size:11px;font-family:'DM Mono',monospace;cursor:pointer;transition:all .15s}
+.refresh-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── Stats bar ── */
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:2rem}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:16px 18px;text-align:center}
+.stat-val{font-family:'DM Mono',monospace;font-size:24px;font-weight:500;line-height:1}
+.stat-label{font-size:10px;color:var(--text3);margin-top:5px;text-transform:uppercase;letter-spacing:.06em}
+
+/* ── Ticker grid ── */
+.section-label{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
+.ticker-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:2.5rem}
+.ticker-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:16px 18px;transition:border-color .2s,transform .2s;cursor:default}
+.ticker-card:hover{border-color:var(--border2);transform:translateY(-1px)}
+.tc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.tc-ticker{font-family:'DM Mono',monospace;font-size:18px;font-weight:500;color:var(--accent)}
+.tc-badge{font-size:9px;font-family:'DM Mono',monospace;font-weight:600;padding:3px 9px;border-radius:3px;letter-spacing:.06em;text-transform:uppercase}
+.tc-badge.bullish{background:var(--green-bg);color:var(--green)}
+.tc-badge.bearish{background:var(--red-bg);color:var(--red)}
+.tc-badge.neutral{background:var(--bg4);color:var(--text3);border:1px solid var(--border2)}
+.tc-mentions{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:10px}
+.sent-bar{display:flex;height:5px;border-radius:3px;overflow:hidden;margin-bottom:7px;gap:1px}
+.sb-bull{background:var(--green)}
+.sb-bear{background:var(--red)}
+.sb-neut{background:var(--bg5)}
+.sent-legend{display:flex;gap:10px;margin-bottom:10px}
+.sl-item{font-size:10px;font-family:'DM Mono',monospace;display:flex;align-items:center;gap:4px;color:var(--text3)}
+.sl-dot{width:5px;height:5px;border-radius:50%}
+.tc-sources{display:flex;gap:4px;flex-wrap:wrap}
+.src-tag{font-size:9px;font-family:'DM Mono',monospace;padding:2px 7px;border-radius:3px}
+.src-tag.reddit{background:rgba(255,90,0,.1);color:#ff5a00}
+.src-tag.stocktwits{background:var(--blue-bg);color:var(--blue)}
+.src-tag.news{background:var(--amber-bg);color:var(--amber)}
+.src-tag.twitter{background:rgba(29,161,242,.08);color:#1da1f2}
+
+/* ── Feed ── */
+.feed-wrap{display:flex;flex-direction:column;gap:8px}
+.feed-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;transition:border-color .15s}
+.feed-card:hover{border-color:var(--border2)}
+.feed-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;gap:10px;flex-wrap:wrap}
+.feed-left{display:flex;align-items:center;gap:8px}
+.feed-ticker{font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:var(--accent)}
+.feed-source{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace}
+.feed-link{font-size:10px;color:var(--text3);text-decoration:none;font-family:'DM Mono',monospace}
+.feed-link:hover{color:var(--accent)}
+.sent-tag{font-size:9px;font-family:'DM Mono',monospace;font-weight:600;padding:3px 8px;border-radius:3px;text-transform:uppercase;flex-shrink:0}
+.sent-tag.positive{background:var(--green-bg);color:var(--green)}
+.sent-tag.negative{background:var(--red-bg);color:var(--red)}
+.sent-tag.neutral{background:var(--bg4);color:var(--text3)}
+.feed-text{font-size:13px;color:var(--text2);line-height:1.6}
+.feed-time{font-size:10px;color:var(--text3);margin-top:4px;font-family:'DM Mono',monospace}
+
+.empty-state{text-align:center;padding:3rem;color:var(--text2);font-size:13px;line-height:1.8}
+
+@media(max-width:700px){
+  .stats-bar{grid-template-columns:repeat(2,1fr)}
+  .ticker-grid{grid-template-columns:repeat(2,1fr)}
+  #main-content{padding:1.5rem 1rem 3rem}
+  .page-title{font-size:24px}
+}
+@media(max-width:420px){
+  .ticker-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- Topbar -->
+<nav class="topbar">
+  <a class="logo" href="index.html">
+    <div class="logo-mark">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <polyline points="1,12 5,7 8,9 12,4 15,6" stroke="#0b0c0b" stroke-width="2" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="12" cy="4" r="1.8" fill="#0b0c0b"/>
+      </svg>
+    </div>
+    <span class="logo-name">PortfolioIQ</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:14px">
+    <div class="live-pill">
+      <div class="live-dot loading" id="live-dot"></div>
+      <span id="live-label">Connecting…</span>
+    </div>
+    <button class="refresh-btn" onclick="forceRefresh()">↺ Refresh</button>
+    <a class="back-btn" href="index.html">
+      ← Portfolio
+    </a>
+  </div>
+</nav>
+
+<!-- ══ LOADING SCREEN ══════════════════════════════════════════ -->
+<div id="loading-screen">
+  <div class="load-icon">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+      <path d="M4 24L10 14L16 18L22 8L28 12" stroke="#0b0c0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="22" cy="8" r="3" fill="#0b0c0b"/>
+    </svg>
+  </div>
+  <div class="load-title">Market <em>Buzz</em></div>
+  <div class="load-sub">Scanning Reddit, StockTwits and news to find what stocks the internet is talking about right now.</div>
+
+  <div class="progress-wrap">
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <div class="progress-msg" id="progress-msg">Waking up the sentiment engine…</div>
+  </div>
+
+  <div class="load-steps">
+    <div class="load-step" id="step-0">
+      <div class="step-icon">◌</div>
+      <span>Starting server</span>
+    </div>
+    <div class="load-step" id="step-1">
+      <div class="step-icon">◌</div>
+      <span>Connecting to Reddit &amp; StockTwits</span>
+    </div>
+    <div class="load-step" id="step-2">
+      <div class="step-icon">◌</div>
+      <span>Scanning posts for stock mentions</span>
+    </div>
+    <div class="load-step" id="step-3">
+      <div class="step-icon">◌</div>
+      <span>Scoring sentiment (bullish / bearish)</span>
+    </div>
+    <div class="load-step" id="step-4">
+      <div class="step-icon">◌</div>
+      <span>Building your live dashboard</span>
+    </div>
+  </div>
+
+  <div class="cold-note" id="cold-note" style="display:none">
+    <strong>First load takes 30–60 seconds.</strong><br>
+    The server sleeps when idle (free tier). Hang tight — it's waking up and scanning the internet for you.
+  </div>
+</div>
+
+<!-- ══ ERROR SCREEN ════════════════════════════════════════════ -->
+<div id="error-screen">
+  <div class="err-icon">⚠</div>
+  <div class="err-title">Server unavailable</div>
+  <div class="err-body">
+    The sentiment API couldn't be reached.<br><br>
+    <strong style="color:var(--text)">If you haven't deployed yet:</strong><br>
+    Go to <a href="https://render.com" target="_blank" style="color:var(--accent)">render.com</a>, connect your GitHub repo <code>stock-screener</code>, and deploy. It's free and takes 5 minutes.<br><br>
+    <strong style="color:var(--text)">If you've deployed:</strong><br>
+    The server may still be waking up. Wait 30 seconds and retry.
+  </div>
+  <button class="retry-btn" onclick="startLoad()">↺ Try again</button>
+</div>
+
+<!-- ══ MAIN CONTENT ════════════════════════════════════════════ -->
+<div id="main-content">
+
+  <div class="page-header">
+    <div class="page-eyebrow">Live social sentiment</div>
+    <div class="page-title">Market <em>Buzz</em></div>
+    <div class="page-meta">
+      <span id="meta-updated">—</span>
+      <span id="meta-posts">—</span>
+      <span id="meta-model">—</span>
+      <div style="display:flex;gap:6px;flex-wrap:wrap" id="src-chips"></div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar" id="stats-bar">
+    <div class="stat-card"><div class="stat-val" id="s-trending" style="color:var(--accent)">—</div><div class="stat-label">Trending stocks</div></div>
+    <div class="stat-card"><div class="stat-val" id="s-mentions">—</div><div class="stat-label">Total mentions</div></div>
+    <div class="stat-card"><div class="stat-val" id="s-bull" style="color:var(--green)">—</div><div class="stat-label">Bullish tickers</div></div>
+    <div class="stat-card"><div class="stat-val" id="s-bear" style="color:var(--red)">—</div><div class="stat-label">Bearish tickers</div></div>
+  </div>
+
+  <!-- Ticker grid -->
+  <div class="section-label">Trending stocks — ranked by mention volume</div>
+  <div class="ticker-grid" id="ticker-grid"></div>
+
+  <!-- Feed -->
+  <div class="section-label">Recent mentions across the internet</div>
+  <div class="feed-wrap" id="feed-wrap"></div>
+
+  <div style="margin-top:2rem;padding:1.5rem;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);font-size:11px;color:var(--text3);line-height:1.8">
+    ⓘ Sentiment scored using VADER (financial text analysis). Sources: Reddit (r/wallstreetbets, r/stocks, r/investing, r/stockmarket) and StockTwits. Auto-refreshes every 60 seconds. Not financial advice.
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   Market Buzz — connects to the Render-deployed FastAPI backend.
+
+   HOW TO DEPLOY:
+   1. Push this repo to GitHub (done ✓)
+   2. Go to render.com → New → Web Service
+   3. Connect repo "stock-screener" → it auto-detects render.yaml
+   4. Deploy (free, takes ~5 min first time)
+   5. Your API URL will be: https://stock-screener-api.onrender.com
+
+   If Render assigned a different URL, update API_BASE below.
+   ═══════════════════════════════════════════════════════════════ */
+
+const API_BASE = 'https://stock-screener-api.onrender.com';
+
+// ── Loading state machine ────────────────────────────────────────
+const STEPS = [
+  { id:'step-0', msg:'Waking up the sentiment server…',         pct:12 },
+  { id:'step-1', msg:'Connecting to Reddit and StockTwits…',   pct:30 },
+  { id:'step-2', msg:'Scanning posts for stock mentions…',      pct:52 },
+  { id:'step-3', msg:'Scoring sentiment — bullish vs bearish…', pct:74 },
+  { id:'step-4', msg:'Building your live dashboard…',           pct:92 },
+];
+
+let stepIndex = 0;
+let stepTimer = null;
+let coldNoteTimer = null;
+let sseSource = null;
+
+function markStep(i, state) {
+  const el = document.getElementById(STEPS[i].id);
+  if (!el) return;
+  el.className = 'load-step ' + state;
+  el.querySelector('.step-icon').textContent = state === 'done' ? '✓' : state === 'active' ? '↻' : '◌';
+}
+
+function advanceStep() {
+  if (stepIndex > 0) markStep(stepIndex - 1, 'done');
+  if (stepIndex >= STEPS.length) return;
+  const s = STEPS[stepIndex];
+  markStep(stepIndex, 'active');
+  document.getElementById('progress-fill').style.width = s.pct + '%';
+  document.getElementById('progress-msg').textContent = s.msg;
+  stepIndex++;
+  // Vary timing to feel natural
+  const delays = [4000, 6000, 6000, 7000, 5000];
+  stepTimer = setTimeout(advanceStep, delays[stepIndex - 1] || 5000);
+}
+
+function startLoad() {
+  // Reset UI
+  stepIndex = 0;
+  clearTimeout(stepTimer);
+  clearTimeout(coldNoteTimer);
+  STEPS.forEach((_, i) => markStep(i, ''));
+  document.getElementById('progress-fill').style.width = '4%';
+  document.getElementById('progress-msg').textContent = 'Waking up the sentiment server…';
+  document.getElementById('cold-note').style.display = 'none';
+  document.getElementById('loading-screen').style.display = 'flex';
+  document.getElementById('error-screen').style.display = 'none';
+  document.getElementById('main-content').style.display = 'none';
+  setLive('loading');
+
+  // Show cold-start note after 8 seconds
+  coldNoteTimer = setTimeout(() => {
+    document.getElementById('cold-note').style.display = 'block';
+  }, 8000);
+
+  // Start step animation
+  advanceStep();
+
+  // Kick off data fetch — retries until server wakes
+  fetchWithRetry();
+}
+
+// ── Fetch with retry (handles Render cold start) ─────────────────
+let retryCount = 0;
+const MAX_RETRIES = 8;
+const RETRY_DELAYS = [5000, 8000, 10000, 12000, 15000, 15000, 20000, 20000];
+
+async function fetchWithRetry() {
+  try {
+    const ctrl = new AbortController();
+    const timeout = setTimeout(() => ctrl.abort(), 25000);
+    const r = await fetch(`${API_BASE}/trending`, { signal: ctrl.signal });
+    clearTimeout(timeout);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const data = await r.json();
+    clearTimeout(stepTimer);
+    clearTimeout(coldNoteTimer);
+    retryCount = 0;
+    onDataReceived(data);
+    connectSSE();
+  } catch (e) {
+    retryCount++;
+    if (retryCount > MAX_RETRIES) {
+      onError();
+    } else {
+      const delay = RETRY_DELAYS[retryCount - 1] || 20000;
+      console.log(`Retry ${retryCount}/${MAX_RETRIES} in ${delay}ms…`);
+      setTimeout(fetchWithRetry, delay);
+    }
+  }
+}
+
+// ── SSE for live 60-second updates ───────────────────────────────
+function connectSSE() {
+  if (sseSource) { sseSource.close(); sseSource = null; }
+  try {
+    sseSource = new EventSource(`${API_BASE}/trending/stream`);
+    sseSource.onmessage = e => {
+      try {
+        const data = JSON.parse(e.data);
+        if (!data.error) onDataReceived(data);
+      } catch (_) {}
+    };
+    sseSource.onerror = () => {
+      // SSE dropped — silently reconnect after 30s
+      sseSource.close(); sseSource = null;
+      setTimeout(connectSSE, 30000);
+    };
+  } catch (_) {}
+}
+
+// ── Called when data arrives ─────────────────────────────────────
+function onDataReceived(data) {
+  clearTimeout(stepTimer);
+  clearTimeout(coldNoteTimer);
+  // Mark remaining steps done
+  STEPS.forEach((_, i) => markStep(i, 'done'));
+  document.getElementById('progress-fill').style.width = '100%';
+
+  setTimeout(() => {
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('error-screen').style.display = 'none';
+    document.getElementById('main-content').style.display = 'block';
+    setLive('live');
+    renderDashboard(data);
+  }, 400);
+}
+
+function onError() {
+  clearTimeout(stepTimer);
+  clearTimeout(coldNoteTimer);
+  document.getElementById('loading-screen').style.display = 'none';
+  document.getElementById('main-content').style.display = 'none';
+  document.getElementById('error-screen').style.display = 'flex';
+  setLive('err');
+}
+
+function forceRefresh() {
+  if (sseSource) { sseSource.close(); sseSource = null; }
+  startLoad();
+}
+
+// ── Live indicator ────────────────────────────────────────────────
+function setLive(state) {
+  const dot = document.getElementById('live-dot');
+  const lbl = document.getElementById('live-label');
+  const map = {
+    live:    ['on',      'Live'],
+    loading: ['loading', 'Loading…'],
+    err:     ['err',     'Offline'],
+  };
+  const [cls, txt] = map[state] || ['err', 'Unknown'];
+  dot.className = 'live-dot ' + cls;
+  lbl.textContent = txt;
+}
+
+// ── Render dashboard ─────────────────────────────────────────────
+function renderDashboard(data) {
+  const trending = data.trending || [];
+  const updated = new Date(data.last_updated);
+  const ts = updated.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+  // Meta row
+  document.getElementById('meta-updated').textContent = 'Updated ' + ts;
+  document.getElementById('meta-posts').textContent = (data.posts_analyzed || 0) + ' posts scanned';
+  document.getElementById('meta-model').textContent = 'Model: ' + (data.model || 'VADER').toUpperCase();
+
+  // Source chips
+  const allSrc = ['Reddit', 'StockTwits', 'Twitter/X', 'News'];
+  const active = new Set(data.sources_active || []);
+  document.getElementById('src-chips').innerHTML = allSrc.map(s =>
+    `<span class="src-chip ${active.has(s) ? 'on' : 'off'}">${s}${active.has(s) ? ' ✓' : ' ✕'}</span>`
+  ).join('');
+
+  // Stats
+  const totalM = trending.reduce((a, b) => a + b.mentions, 0);
+  const bullN = trending.filter(t => t.overall === 'bullish').length;
+  const bearN = trending.filter(t => t.overall === 'bearish').length;
+  document.getElementById('s-trending').textContent = trending.length;
+  document.getElementById('s-mentions').textContent = totalM;
+  document.getElementById('s-bull').textContent = bullN;
+  document.getElementById('s-bear').textContent = bearN;
+
+  // Ticker grid
+  const grid = document.getElementById('ticker-grid');
+  if (!trending.length) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1">No trending tickers found yet.<br><small>Reddit data may still be processing.</small></div>';
+  } else {
+    grid.innerHTML = trending.slice(0, 12).map(t => {
+      const sources = [
+        t.reddit_mentions > 0      ? `<span class="src-tag reddit">Reddit&nbsp;${t.reddit_mentions}</span>` : '',
+        t.stocktwits_mentions > 0  ? `<span class="src-tag stocktwits">StockTwits&nbsp;${t.stocktwits_mentions}</span>` : '',
+        (t.twitter_mentions || 0) > 0  ? `<span class="src-tag twitter">X&nbsp;${t.twitter_mentions}</span>` : '',
+        (t.news_mentions || 0) > 0     ? `<span class="src-tag news">News&nbsp;${t.news_mentions}</span>` : '',
+      ].filter(Boolean).join('');
+      return `
+        <div class="ticker-card">
+          <div class="tc-top">
+            <div class="tc-ticker">${esc(t.ticker)}</div>
+            <span class="tc-badge ${t.overall}">${t.overall}</span>
+          </div>
+          <div class="tc-mentions">${t.mentions} mention${t.mentions !== 1 ? 's' : ''}</div>
+          <div class="sent-bar">
+            <div class="sb-bull" style="flex:${t.bullish_pct}"></div>
+            <div class="sb-bear" style="flex:${t.bearish_pct}"></div>
+            <div class="sb-neut" style="flex:${t.neutral_pct}"></div>
+          </div>
+          <div class="sent-legend">
+            <span class="sl-item"><span class="sl-dot" style="background:var(--green)"></span>${t.bullish_pct}% bull</span>
+            <span class="sl-item"><span class="sl-dot" style="background:var(--red)"></span>${t.bearish_pct}% bear</span>
+            <span class="sl-item"><span class="sl-dot" style="background:var(--bg5)"></span>${t.neutral_pct}% neut</span>
+          </div>
+          <div class="tc-sources">${sources}</div>
+        </div>`;
+    }).join('');
+  }
+
+  // Feed
+  const allFeed = [];
+  const seen = new Set();
+  trending.forEach(t => (t.feed || []).forEach(p => {
+    const k = (p.text || '').slice(0, 50);
+    if (!seen.has(k)) { seen.add(k); allFeed.push(Object.assign({}, p, { ticker: t.ticker })); }
+  }));
+
+  const feedEl = document.getElementById('feed-wrap');
+  if (!allFeed.length) {
+    feedEl.innerHTML = '<div class="empty-state">No recent posts loaded yet.</div>';
+  } else {
+    feedEl.innerHTML = allFeed.slice(0, 25).map(p => {
+      const sc = p.sentiment === 'positive' ? 'positive' : p.sentiment === 'negative' ? 'negative' : 'neutral';
+      const sl = p.sentiment === 'positive' ? '↑ Bullish' : p.sentiment === 'negative' ? '↓ Bearish' : '→ Neutral';
+      const srcLabel = p.sub ? (p.source + ' · ' + p.sub) : (p.source || '');
+      const link = p.url ? `<a class="feed-link" href="${esc(p.url)}" target="_blank">↗ open</a>` : '';
+      const tsStr = p.ts ? new Date(p.ts).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
+      return `
+        <div class="feed-card">
+          <div class="feed-top">
+            <div class="feed-left">
+              <span class="feed-ticker">$${esc(p.ticker)}</span>
+              <span class="feed-source">${esc(srcLabel)}</span>
+              ${link}
+            </div>
+            <span class="sent-tag ${sc}">${sl}</span>
+          </div>
+          <div class="feed-text">${esc(p.text || '')}</div>
+          ${tsStr ? `<div class="feed-time">${tsStr}</div>` : ''}
+        </div>`;
+    }).join('');
+  }
+}
+
+function esc(s) {
+  return String(s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// ── Boot ─────────────────────────────────────────────────────────
+startLoad();
+</script>
+</body>
+</html>

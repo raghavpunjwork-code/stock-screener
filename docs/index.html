@@ -333,10 +333,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <span class="logo-name">PortfolioIQ</span>
   </div>
   <div class="topbar-r">
-    <button class="buzz-tab" id="buzz-toggle" onclick="toggleBuzz()">
+    <a class="buzz-tab" href="buzz.html">
       <span class="buzz-dot"></span>
       Market Buzz
-    </button>
+    </a>
     <span class="top-badge">S&amp;P 500 · Beta</span>
     <span class="clock" id="clock">--:--:--</span>
   </div>
@@ -379,49 +379,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   </div>
 </div>
 
-<!-- Market Buzz Section (browser-only — calls Reddit + StockTwits directly) -->
-<div id="buzz-section" style="display:none">
-  <div style="max-width:900px;margin:0 auto;padding:1.5rem 2rem 4rem">
-    <div class="buzz-header">
-      <div>
-        <div class="buzz-title-row">
-          <div class="buzz-title">Market Buzz</div>
-          <div class="buzz-live">
-            <div class="buzz-live-dot idle" id="buzz-live-dot"></div>
-            <span id="buzz-live-label">Loading…</span>
-          </div>
-        </div>
-        <div class="buzz-meta" id="buzz-meta">Scanning Reddit · StockTwits · Sentiment analysis running…</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <div class="buzz-sources" id="buzz-sources">
-          <span class="buzz-src-badge on">Reddit ✓</span>
-          <span class="buzz-src-badge on">StockTwits ✓</span>
-          <span class="buzz-src-badge">Twitter/X ✕</span>
-          <span class="buzz-src-badge">News ✕</span>
-        </div>
-        <button class="buzz-refresh" onclick="buzzLoad(true)">↺ Refresh</button>
-      </div>
-    </div>
-    <div id="buzz-loading" class="buzz-loading">
-      <div class="spinner"></div>
-      <div style="font-family:'DM Mono',monospace;font-size:12px">Fetching social data…</div>
-    </div>
-    <div id="buzz-error" style="display:none;text-align:center;padding:3rem;color:var(--text);font-size:14px;line-height:2">
-      <div style="font-size:28px;margin-bottom:1rem">⚠</div>
-      <strong>Could not load social data.</strong><br>
-      <span style="color:var(--text2);font-size:12px">Reddit may be temporarily rate-limiting requests from this browser.<br>
-      Wait 30 seconds and click <span style="color:var(--accent)">↺ Refresh</span> to try again.</span>
-    </div>
-    <div id="buzz-content" style="display:none">
-      <div class="buzz-stats" id="buzz-stats"></div>
-      <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">Trending stocks — ranked by social mention volume</div>
-      <div class="buzz-grid" id="buzz-grid"></div>
-      <div class="buzz-feed-title">Recent mentions</div>
-      <div class="buzz-feed" id="buzz-feed"></div>
-    </div>
-  </div>
-</div>
 
 <div class="hero">
   <div class="hero-eyebrow">AI-powered portfolio analysis</div>
@@ -980,4 +937,48 @@ function renderReport(holdings,sd,ai){
   if(holdings.length<5)recs.push({type:'info',icon:'i',title:'Increase number of holdings',desc:`${holdings.length} holding${holdings.length!==1?'s':''} creates high single-stock event risk. Modern Portfolio Theory suggests 10–15 uncorrelated positions for efficient risk reduction.`});
   if(!recs.length)recs.push({type:'info',icon:'i',title:'No major rebalancing actions needed',desc:'Portfolio is well-structured. Continue monitoring RSI and moving average signals for individual position updates as market conditions evolve.'});
   document.getElementById('recs').innerHTML=recs.map(r=>`<div class="rec ${r.type}"><div class="rec-icon">${r.icon}</div><div><div class="rec-title">${r.title}</div><div class="rec-desc">${r.desc}</div></div></div>`).join('');
-  i
+  if(ai.rebal)document.getElementById('rebal-ai').innerHTML=`<div class="ai-block"><div class="ai-block-label green">AI recommendation</div><div class="ai-prose">${ai.rebal}</div></div>`;
+}
+
+function resetAll(){
+  selected=[];renderChips();
+  document.getElementById('p1').style.display='';document.getElementById('p2').style.display='';
+  document.getElementById('p1').className='panel active';document.getElementById('p2').className='panel';
+  document.getElementById('b1').textContent='1';document.getElementById('b2').textContent='2';
+  document.getElementById('e1').style.display='none';document.getElementById('e2').style.display='none';
+  document.getElementById('sub1').textContent='Search by company name or ticker symbol';
+  document.getElementById('shares-grid').innerHTML='';document.getElementById('port-bar').style.display='none';
+  document.getElementById('report').classList.remove('show');document.getElementById('loading').classList.remove('show');
+  document.getElementById('bench-section').style.display='none';
+  if(benchChart){benchChart.destroy();benchChart=null;}
+  ['ls1','ls2','ls3','ls4'].forEach(id=>{const el=document.getElementById(id);el.classList.remove('vis','done');});
+  document.querySelectorAll('.tpl-card').forEach(c=>c.classList.remove('selected-tpl'));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+
+/* ── Market Pulse Strip ── */
+async function fetchIndex(symbol){
+  try{
+    const r=await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1d`,{signal:AbortSignal.timeout(4000)});
+    if(!r.ok)throw new Error();
+    const d=await r.json();
+    const meta=d?.chart?.result?.[0]?.meta;
+    if(!meta)throw new Error();
+    return{price:meta.regularMarketPrice,prev:meta.chartPreviousClose||meta.previousClose,open:meta.marketState==='REGULAR'};
+  }catch{return null;}
+}
+
+async function loadPulse(){
+  const indices=[
+    {sym:'^GSPC',valId:'sp500-val',chgId:'sp500-chg'},
+    {sym:'^IXIC',valId:'nasdaq-val',chgId:'nasdaq-chg'},
+    {sym:'^DJI',valId:'dow-val',chgId:'dow-chg'},
+    {sym:'^VIX',valId:'vix-val',chgId:null},
+    {sym:'^TNX',valId:'treasury-val',chgId:null},
+  ];
+  const results=await Promise.all(indices.map(i=>fetchIndex(i.sym)));
+  res
